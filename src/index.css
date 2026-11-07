@@ -1466,6 +1466,109 @@ button, a, input, select, textarea {
   .hero-collage { display: none; }
 }
 
+/* ── Browse toolbar (search / view / sort) ────────────────── */
+.browse-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  padding: 10px 0;
+  padding-top: calc(10px + env(safe-area-inset-top));
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  background: color-mix(in srgb, var(--bg-primary) 90%, transparent);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+@media (min-width: 768px) {
+  .browse-toolbar {
+    top: 88px;
+    padding: 14px 0;
+  }
+}
+
+.browse-toolbar__inner {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.browse-toolbar__controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+
+.seg-btn {
+  padding: 7px 16px;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  font-weight: 500;
+  transition: all var(--dur-fast) var(--spring);
+  text-transform: capitalize;
+}
+
+.seg-btn--active {
+  font-weight: 700;
+}
+
+.browse-sort {
+  min-width: 150px;
+  padding-right: 32px;
+}
+
+@media (max-width: 767px) {
+  .seg-btn {
+    padding: 6px 9px;
+    font-size: 12px;
+  }
+
+  .browse-sort {
+    min-width: 0;
+    width: 118px;
+    padding-left: 10px;
+    padding-right: 24px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 400px) {
+  .browse-sort { width: 108px; }
+  .seg-btn { padding: 6px 7px; }
+}
+
+@media (max-width: 767px) {
+  .browse-toolbar__inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .browse-toolbar__controls {
+    width: 100%;
+    overflow-x: visible;
+    padding-bottom: 2px;
+  }
+
+  /* Let the view tabs scroll inside their own track so the sort control
+     stays fully visible instead of being clipped. */
+  .browse-toolbar__tabs {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .browse-toolbar__tabs::-webkit-scrollbar { display: none; }
+
+  .browse-toolbar__controls > * { flex-shrink: 0; }
+  .browse-toolbar__controls > .browse-toolbar__tabs { flex-shrink: 1; }
+}
+
 /* ── Product gallery ──────────────────────────────────────── */
 .gallery-stage {
   position: relative;

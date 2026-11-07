@@ -211,17 +211,8 @@ export default function HomePage() {
       </section>
 
       {/* ── Search + View Toggle Bar ─────────────────────────── */}
-      <div
-        style={{
-          position:   'sticky',
-          top:        72,
-          zIndex:     'var(--z-sticky)' as React.CSSProperties['zIndex'],
-          background: 'var(--bg-primary)',
-          borderBottom: '1px solid var(--border)',
-          padding:    '14px 0',
-        }}
-      >
-        <div className="container" style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+      <div className="browse-toolbar">
+        <div className="container browse-toolbar__inner">
           {/* Search input */}
           <div style={{ flex: 1, position: 'relative', minWidth: 220 }}>
             <Search size={15} color="var(--text-tertiary)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
@@ -241,21 +232,19 @@ export default function HomePage() {
             )}
           </div>
 
+          <div className="browse-toolbar__controls">
           {/* View mode pills */}
-          <div style={{ display: 'flex', gap: 2, background: 'var(--bg-secondary)', padding: '3px', borderRadius: 'var(--radius-lg)' }}>
+          <div className="browse-toolbar__tabs" style={{ display: 'flex', gap: 2, background: 'var(--bg-secondary)', padding: '3px', borderRadius: 'var(--radius-lg)' }}>
             {VIEW_MODES.map(v => (
               <button
                 key={v}
                 onClick={() => setView(v)}
                 aria-pressed={view === v}
+                className={view === v ? 'seg-btn seg-btn--active' : 'seg-btn'}
                 style={{
-                  padding: '7px 16px', borderRadius: 'var(--radius-md)', border: 'none',
-                  cursor: 'pointer', background: view === v ? 'var(--bg-card)' : 'transparent',
+                  background: view === v ? 'var(--bg-card)' : 'transparent',
                   color: view === v ? 'var(--text-primary)' : 'var(--text-tertiary)',
-                  fontWeight: view === v ? 700 : 500, fontSize: 'var(--text-body)',
-                  fontFamily: 'var(--font-sans)', transition: 'all var(--dur-fast) var(--spring)',
                   boxShadow: view === v ? 'var(--shadow-card)' : 'none',
-                  textTransform: 'capitalize',
                 }}
               >
                 {v}
@@ -294,8 +283,8 @@ export default function HomePage() {
             value={sort}
             onChange={e => setSort(e.target.value as SortOption)}
             aria-label="Sort results"
-            className="input-base"
-            style={{ width: 'auto', minWidth: 150, paddingRight: 32 }}
+            className="input-base browse-sort"
+            style={{ width: 'auto' }}
           >
             <option value="relevance">Relevance</option>
             <option value="newest">Newest</option>
@@ -304,6 +293,7 @@ export default function HomePage() {
             <option value="price-asc">Price ↑</option>
             <option value="price-desc">Price ↓</option>
           </select>
+          </div>
         </div>
 
         {/* Filter panel */}
