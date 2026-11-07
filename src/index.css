@@ -1154,6 +1154,23 @@ button, a, input, select, textarea {
   white-space: nowrap;
 }
 
+@media (max-width: 400px) {
+  .bottom-tab-item {
+    padding-left: 2px;
+    padding-right: 2px;
+    gap: 3px;
+  }
+  .bottom-tab-label { font-size: 9px; }
+}
+
+/* Comfortable touch targets on phones/tablets */
+@media (pointer: coarse) {
+  .btn-icon {
+    min-width: 42px;
+    min-height: 42px;
+  }
+}
+
 .bottom-tab-item svg {
   transition: transform var(--dur-fast) var(--spring-bounce);
 }

@@ -232,7 +232,7 @@ export default function LookbooksPage() {
           {/* Controls bar */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, flexWrap: 'wrap', gap: 16 }}>
             {/* Sort tabs */}
-            <div style={{ display: 'flex', gap: 4, background: 'var(--bg-secondary)', padding: 4, borderRadius: 'var(--radius-lg)' }}>
+            <div style={{ display: 'flex', gap: 4, background: 'var(--bg-secondary)', padding: 4, borderRadius: 'var(--radius-lg)', maxWidth: '100%', overflowX: 'auto' }}>
               {SORT_TABS.map(tab => {
                 const Icon     = tab.icon;
                 const isActive = sort === tab.key;

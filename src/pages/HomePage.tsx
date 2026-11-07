@@ -397,7 +397,7 @@ export default function HomePage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
                       <span style={{ fontSize: 'var(--text-overline)', fontWeight: 700, letterSpacing: 'var(--tracking-widest)', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>Sponsored</span>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
                       {filteredStores.filter(s => s.isSponsored).map(store => (
                         <StoreCard key={store.id} store={store} />
                       ))}
@@ -419,7 +419,7 @@ export default function HomePage() {
                 {filteredStores.filter(s => !s.isSponsored).length === 0 ? (
                   <EmptyState icon="SearchX" title="No boutiques found" description={`No results for "${debouncedQuery}"`} cta="Clear Search" onCtaClick={() => setQuery('')} />
                 ) : (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
                     {filteredStores.filter(s => !s.isSponsored).map((store, i) => (
                       <SectionReveal key={store.id} delay={i * 0.04}>
                         <StoreCard store={store} />
@@ -468,7 +468,7 @@ export default function HomePage() {
               {filteredLookbooks.length === 0 ? (
                 <EmptyState icon="Layers" title="No lookbooks yet" description="Be the first to create one in the Style Studio!" cta="Open Studio" ctaLink="/studio" />
               ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
                   {filteredLookbooks.map((lb, i) => (
                     <SectionReveal key={lb.id} delay={i * 0.04}>
                       <LookbookCard lookbook={lb} rank={i + 1} />

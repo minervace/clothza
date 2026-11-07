@@ -154,7 +154,7 @@ export default function StorePage() {
           </div>
 
           {/* Actions */}
-          <div style={{ display: 'flex', gap: 10, flexShrink: 0, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 10, flexShrink: 0, flexWrap: 'wrap', maxWidth: '100%' }}>
             {store.instagram && (
               <a href={`https://instagram.com/${store.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm">
                 <AtSign size={14} /> {store.instagram}

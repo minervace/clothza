@@ -486,7 +486,7 @@ export default function ProductPage() {
             {reviews.length === 0 ? (
               <EmptyState icon="Star" title="No reviews yet" description="Be the first to review this product." compact />
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: 16 }}>
                 {reviews.map(r => <ReviewCard key={r.id} review={r} />)}
               </div>
             )}
