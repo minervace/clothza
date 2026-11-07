@@ -10,6 +10,18 @@
     <meta property="og:description" content="Multi-vendor fashion e-commerce and community styling hub. Nepal-first, NPR currency." />
     <meta property="og:type" content="website" />
     <title>Clothza — Where designers meet tastemakers.</title>
+    <script>
+      // Apply the saved theme before first paint to avoid a flash of the wrong scheme
+      (function () {
+        try {
+          var saved = localStorage.getItem('clothza_theme');
+          var theme = saved === 'light' || saved === 'dark'
+            ? saved
+            : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          if (theme === 'dark') document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
 
     <!-- Google Fonts: Playfair Display (editorial serif) + Outfit (modern sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

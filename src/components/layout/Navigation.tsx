@@ -440,7 +440,7 @@ export function Navigation() {
       </nav>
 
       {/* ── Mobile Bottom Tab Bar ───────────────────────── */}
-      <MobileTabBar cartCount={cartCount} favCount={favCount} />
+      <MobileTabBar cartCount={cartCount} favCount={favCount} isDark={isDark} onToggleTheme={toggleTheme} />
     </>
   );
 }
@@ -476,7 +476,7 @@ function DropdownItem({ icon, label, to }: { icon: React.ReactNode; label: strin
 
 // ── Mobile Bottom Tab Bar ────────────────────────────────────
 
-function MobileTabBar({ cartCount: _cartCount, favCount }: { cartCount: number; favCount: number }) {
+function MobileTabBar({ cartCount: _cartCount, favCount, isDark, onToggleTheme }: { cartCount: number; favCount: number; isDark: boolean; onToggleTheme: () => void }) {
   const location = useLocation();
 
   const tabs = [
@@ -517,6 +517,17 @@ function MobileTabBar({ cartCount: _cartCount, favCount }: { cartCount: number; 
           </Link>
         );
       })}
+      <button
+        type="button"
+        onClick={onToggleTheme}
+        className="bottom-tab-item"
+        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        aria-pressed={isDark}
+        style={{ background: 'none', border: 'none', font: 'inherit' }}
+      >
+        {isDark ? <Sun size={22} /> : <Moon size={22} />}
+        <span className="bottom-tab-label">{isDark ? 'Light' : 'Dark'}</span>
+      </button>
     </div>
   );
 }
