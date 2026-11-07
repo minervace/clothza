@@ -6,15 +6,15 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Plus, Minus, ShoppingCart, Trash2, AlertTriangle } from 'lucide-react';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { Plus, Minus, Trash2, AlertTriangle } from 'lucide-react';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { optimizeImageUrl, formatPrice } from '@/lib/formatters';
 import { calcOrderTotal } from '@/lib/formatters';
 import { Drawer } from '@/components/ui/Drawer';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { PriceTag } from '@/components/commerce/PriceTag';
 import { haptic } from '@/lib/haptics';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 
 interface CartDrawerProps {
   isOpen:  boolean;

@@ -6,14 +6,14 @@
 // ============================================================
 
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Heart, Eye, BadgeCheck, ShoppingCart, Share2, Copy, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowLeft, Heart, Eye, BadgeCheck, ShoppingCart, Share2, Check } from 'lucide-react';
 import { useState } from 'react';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition, SectionReveal } from '@/components/layout/PageTransition';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { optimizeImageUrl, formatCompactNumber, formatDate, formatPrice } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 

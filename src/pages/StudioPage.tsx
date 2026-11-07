@@ -7,12 +7,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Plus, X, Save, Shuffle, BookOpen } from 'lucide-react';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { optimizeImageUrl, formatPrice } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import { sanitizeInput } from '@/lib/sanitize';

@@ -7,12 +7,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, Store, X, ShoppingCart } from 'lucide-react';
-import { useMarketplace } from '@/context/MarketplaceContext';
-import { PageTransition, SectionReveal } from '@/components/layout/PageTransition';
+import { useMarketplace } from '@/hooks/useMarketplace';
+import { PageTransition } from '@/components/layout/PageTransition';
 import { ProductCard } from '@/components/commerce/ProductCard';
 import { StoreCard } from '@/components/commerce/StoreCard';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { haptic } from '@/lib/haptics';
 
 type FavTab = 'products' | 'stores';

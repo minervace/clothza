@@ -111,38 +111,4 @@ export function ClothzaToaster() {
   );
 }
 
-// ── Toast Helpers ────────────────────────────────────────────
-
-export const toast = {
-  success: (msg: string) =>
-    hotToast.success(msg, { duration: 3500 }),
-
-  error: (msg: string) =>
-    hotToast.error(msg, { duration: 5000 }),
-
-  warning: (msg: string) =>
-    hotToast(msg, {
-      duration: 4000,
-      icon:     '⚠️',
-      // Pass custom type so renderer picks 'warning'
-      // react-hot-toast doesn't have a native warning type,
-      // so we use the custom renderer approach below
-    }),
-
-  info: (msg: string) =>
-    hotToast(msg, { duration: 3500 }),
-
-  loading: (msg: string) =>
-    hotToast.loading(msg),
-
-  dismiss: (id?: string) =>
-    hotToast.dismiss(id),
-
-  promise: <T,>(
-    promise: Promise<T>,
-    msgs: { loading: string; success: string; error: string }
-  ) =>
-    hotToast.promise(promise, msgs),
-};
-
 export default ClothzaToaster;

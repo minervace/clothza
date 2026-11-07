@@ -11,14 +11,14 @@ import { ShoppingCart, MapPin, CreditCard, CheckCircle2, Tag, X } from 'lucide-r
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { PriceTag } from '@/components/commerce/PriceTag';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { formatPrice, calcOrderTotal } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import { optimizeImageUrl } from '@/lib/formatters';
@@ -55,7 +55,7 @@ export default function CheckoutPage() {
   const navigate    = useNavigate();
   const {
     state, getProduct, cartSubtotal,
-    placeOrder, clearCart, applyCouponCode,
+    placeOrder, applyCouponCode,
   } = useMarketplace();
   const { cart } = state;
 
@@ -65,7 +65,7 @@ export default function CheckoutPage() {
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
   const [placingOrder,  setPlacingOrder]  = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, getValues } = useForm<DeliveryForm>({
+  const { register, handleSubmit, formState: { errors } } = useForm<DeliveryForm>({
     resolver: zodResolver(deliverySchema),
   });
 

@@ -6,17 +6,16 @@
 import { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search, Filter, X, SlidersHorizontal, ChevronDown,
-  Sparkles, TrendingUp, Star, MapPin, ArrowRight,
+  Search, X, SlidersHorizontal,
+  Sparkles, ArrowRight,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition, SectionReveal } from '@/components/layout/PageTransition';
 import { ProductCard } from '@/components/commerce/ProductCard';
 import { StoreCard } from '@/components/commerce/StoreCard';
 import { LookbookCard } from '@/components/community/LookbookCard';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Skeleton } from '@/components/ui/Skeleton';
 import { useDebounce } from '@/hooks/useDebounce';
 import { formatCompactNumber } from '@/lib/formatters';
 import type { ProductCategory } from '@/context/MarketplaceContext';

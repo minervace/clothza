@@ -4,22 +4,22 @@
 // orders management with status update, messages, coupon CRUD
 // ============================================================
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LayoutDashboard, Package, ShoppingBag, MessageCircle,
-  Tag, BarChart2, Plus, Pencil, Trash2, Eye,
-  TrendingUp, DollarSign, Users, Star, X, Check,
+  Package, ShoppingBag, MessageCircle,
+  Tag, BarChart2, Plus, Pencil, Trash2,
+  DollarSign, Star, Check,
   ChevronDown,
 } from 'lucide-react';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { OrderStatusBadge, TierBadge } from '@/components/ui/Badge';
 import { Modal, ConfirmModal } from '@/components/ui/Modal';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { formatPrice, formatDate, formatRating } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import { optimizeImageUrl } from '@/lib/formatters';
@@ -96,11 +96,6 @@ function ProductModal({ isOpen, onClose, storeId, editProduct }: ProductModalPro
     editProduct ? productToForm(editProduct) : emptyProductForm()
   );
   const [saving, setSaving] = useState(false);
-
-  // Reset form when modal opens / switches product
-  const handleOpen = useCallback(() => {
-    setForm(editProduct ? productToForm(editProduct) : emptyProductForm());
-  }, [editProduct]);
 
   const set = (field: keyof ProductFormState, value: string | boolean) =>
     setForm(f => ({ ...f, [field]: value }));
@@ -551,7 +546,7 @@ function StatusDropdown({ orderId, current }: { orderId: string; current: OrderS
 export default function DashboardPage() {
   const {
     state, getStore, getStoreProducts, getStoreOrders,
-    getStoreMessages, deleteProduct, deleteCoupon, addCoupon,
+    getStoreMessages, deleteProduct, deleteCoupon,
   } = useMarketplace();
   const { currentUser } = state;
 

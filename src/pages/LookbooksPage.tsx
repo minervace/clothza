@@ -8,13 +8,12 @@ import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, TrendingUp, Sparkles, BadgeCheck, Grid3X3, LayoutList, Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition, SectionReveal } from '@/components/layout/PageTransition';
 import { LookbookCard } from '@/components/community/LookbookCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { RankBadge } from '@/components/ui/Badge';
 import { formatCompactNumber } from '@/lib/formatters';
-import { optimizeImageUrl } from '@/lib/formatters';
 import type { Lookbook } from '@/context/MarketplaceContext';
 
 type SortKey  = 'trending' | 'newest' | 'most-liked' | 'official';

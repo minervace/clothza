@@ -7,17 +7,17 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Heart, ShoppingCart, ArrowLeft, Share2, Truck, RotateCcw, Shield } from 'lucide-react';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { Star, Heart, ShoppingCart, Truck, RotateCcw, Shield } from 'lucide-react';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition, SectionReveal } from '@/components/layout/PageTransition';
 import { ProductCard } from '@/components/commerce/ProductCard';
 import { ReviewCard } from '@/components/commerce/ReviewCard';
 import { PriceTag } from '@/components/commerce/PriceTag';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Button } from '@/components/ui/Button';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { optimizeImageUrl, formatRating, getStars, formatRelativeTime } from '@/lib/formatters';
+import { optimizeImageUrl, formatRating, getStars } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import { sanitizeInput } from '@/lib/sanitize';
 
@@ -49,18 +49,6 @@ export default function ProductPage() {
   const [comment, setComment] = useState('');
 
   // Derive available colors for selected size
-  const availableColors = useMemo(() => {
-    if (!product) return [];
-    if (!selectedSize) return [...new Set(product.variants.map(v => v.color))];
-    return product.variants.filter(v => v.size === selectedSize).map(v => v.color);
-  }, [product, selectedSize]);
-
-  const availableSizes = useMemo(() => {
-    if (!product) return [];
-    if (!selectedColor) return [...new Set(product.variants.map(v => v.size))];
-    return product.variants.filter(v => v.color === selectedColor).map(v => v.size);
-  }, [product, selectedColor]);
-
   const selectedVariant = useMemo(() => {
     if (!product) return null;
     return product.variants.find(v => v.size === selectedSize && v.color === selectedColor) ?? null;

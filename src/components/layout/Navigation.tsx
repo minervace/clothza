@@ -4,23 +4,23 @@
 // Scroll > 80px → height shrinks + blur intensifies
 // ============================================================
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, Sun, Moon, Heart, ShoppingCart, User,
   LogOut, LayoutDashboard, ShieldCheck, Package,
-  Home, BookOpen, Sparkles, ChevronDown, X, Menu,
+  Home, BookOpen, Sparkles, ChevronDown,
 } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useDebounce } from '@/hooks/useDebounce';
 
 export function Navigation() {
   const {
     state, isDark, toggleTheme, cartCount, logout,
-    isFavoriteProduct, isFavoriteStore, searchAll,
+    searchAll,
   } = useMarketplace();
   const { currentUser, favorites } = state;
   const navigate  = useNavigate();
@@ -30,7 +30,6 @@ export function Navigation() {
   const [searchOpen,      setSearchOpen]       = useState(false);
   const [searchQuery,     setSearchQuery]      = useState('');
   const [userMenuOpen,    setUserMenuOpen]     = useState(false);
-  const [mobileMenuOpen,  setMobileMenuOpen]   = useState(false);
 
   const debouncedQuery = useDebounce(searchQuery, 300);
   const searchResults  = debouncedQuery.length > 1 ? searchAll(debouncedQuery) : null;
@@ -46,7 +45,6 @@ export function Navigation() {
   useEffect(() => {
     setSearchOpen(false);
     setUserMenuOpen(false);
-    setMobileMenuOpen(false);
     setSearchQuery('');
   }, [location.pathname]);
 
@@ -478,7 +476,7 @@ function DropdownItem({ icon, label, to }: { icon: React.ReactNode; label: strin
 
 // ── Mobile Bottom Tab Bar ────────────────────────────────────
 
-function MobileTabBar({ cartCount, favCount }: { cartCount: number; favCount: number }) {
+function MobileTabBar({ cartCount: _cartCount, favCount }: { cartCount: number; favCount: number }) {
   const location = useLocation();
 
   const tabs = [

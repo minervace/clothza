@@ -9,11 +9,11 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { optimizeImageUrl, formatRating } from '@/lib/formatters';
 import { PriceTag } from '@/components/commerce/PriceTag';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { haptic } from '@/lib/haptics';
 import type { Product } from '@/context/MarketplaceContext';
 
@@ -55,7 +55,6 @@ export function ProductCard({ product, className, eager = false }: ProductCardPr
     setTimeout(() => setIsAddingCart(false), 600);
   };
 
-  const hasDiscount = product.compareAtPrice !== undefined && product.compareAtPrice > product.price;
   const isOutOfStock = product.variants.every(v => v.stock === 0);
 
   return (

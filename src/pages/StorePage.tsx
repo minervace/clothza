@@ -3,14 +3,13 @@
 // Individual store page: banner, info, product grid, messaging
 // ============================================================
 
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   MapPin, Star, Heart, MessageCircle, AtSign,
-  Grid3X3, SortDesc, ExternalLink,
 } from 'lucide-react';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition, SectionReveal } from '@/components/layout/PageTransition';
 import { ProductCard } from '@/components/commerce/ProductCard';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -19,7 +18,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { optimizeImageUrl, formatRating, formatCompactNumber } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import type { Product, ProductCategory } from '@/context/MarketplaceContext';

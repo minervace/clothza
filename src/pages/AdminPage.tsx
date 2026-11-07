@@ -5,12 +5,12 @@
 // ============================================================
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
-  ShieldCheck, Users, Store, BarChart2, Trash2, UserCheck,
+  ShieldCheck, Users, Store, BarChart2, Trash2,
   Eye, Crown, Lock, AlertTriangle, CheckCircle2,
 } from 'lucide-react';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { useAdminLockout } from '@/hooks/useAdminLockout';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { Button } from '@/components/ui/Button';
@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/Input';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ConfirmModal } from '@/components/ui/Modal';
 import { TierBadge, OrderStatusBadge } from '@/components/ui/Badge';
-import { toast } from '@/components/ui/Toast';
+import { toast } from '@/lib/toast';
 import { formatPrice, formatDate, formatCountdown } from '@/lib/formatters';
 import { verifyAdminPassword } from '@/lib/crypto';
 import { haptic } from '@/lib/haptics';
@@ -33,7 +33,7 @@ const TABS: Array<{ id: AdminTab; label: string; icon: typeof Users }> = [
 ];
 
 export default function AdminPage() {
-  const { state, deleteUser, updateUserRole, updateOrderStatus } = useMarketplace();
+  const { state, deleteUser, updateOrderStatus } = useMarketplace();
   const { currentUser } = state;
 
   // Admin lockout hook

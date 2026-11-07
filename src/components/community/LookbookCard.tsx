@@ -5,10 +5,10 @@
 // ============================================================
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Heart, Eye, ChevronRight, BadgeCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { optimizeImageUrl, formatCompactNumber, formatRelativeTime } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import type { Lookbook } from '@/context/MarketplaceContext';

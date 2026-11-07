@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Star, Heart } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useMarketplace } from '@/context/MarketplaceContext';
+import { useMarketplace } from '@/hooks/useMarketplace';
 import { optimizeImageUrl, formatRating } from '@/lib/formatters';
 import { TierBadge } from '@/components/ui/Badge';
 import { Skeleton } from '@/components/ui/Skeleton';

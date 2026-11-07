@@ -6,7 +6,6 @@
 
 import React, {
   createContext,
-  useContext,
   useReducer,
   useEffect,
   useCallback,
@@ -17,7 +16,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useTheme } from '@/hooks/useTheme';
 import supabase, { isSupabaseConfigured } from '@/lib/supabase';
 import { generateId, generateTrackingId } from '@/lib/crypto';
-import { slugify, calcOrderTotal, applyCoupon } from '@/lib/formatters';
+import { calcOrderTotal, applyCoupon } from '@/lib/formatters';
 import { optimizeImageUrl } from '@/lib/formatters';
 
 // ── Type Definitions ─────────────────────────────────────────
@@ -1200,7 +1199,7 @@ const initialState: MarketplaceState = {
 
 // ── Context Shape ────────────────────────────────────────────
 
-interface MarketplaceContextValue {
+export interface MarketplaceContextValue {
   // State
   state: MarketplaceState;
 
@@ -1792,16 +1791,6 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
       {children}
     </MarketplaceContext.Provider>
   );
-}
-
-// ── Hook ─────────────────────────────────────────────────────
-
-export function useMarketplace(): MarketplaceContextValue {
-  const ctx = useContext(MarketplaceContext);
-  if (!ctx) {
-    throw new Error('useMarketplace must be used within a <MarketplaceProvider>');
-  }
-  return ctx;
 }
 
 export default MarketplaceContext;
