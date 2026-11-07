@@ -77,6 +77,15 @@ export default function HomePage() {
     return [...state.lookbooks].sort((a, b) => b.likes - a.likes);
   }, [state.lookbooks]);
 
+  const heroCovers = useMemo(
+    () =>
+      state.lookbooks
+        .map(lb => lb.coverImage)
+        .filter((src): src is string => Boolean(src))
+        .slice(0, 3),
+    [state.lookbooks]
+  );
+
   const resetFilters = useCallback(() => {
     setCategory('All');
     setPriceMin('');
@@ -113,6 +122,7 @@ export default function HomePage() {
         <div style={{ position: 'absolute', bottom: '-10%', left: '-5%', width: '35vw', height: '35vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(210,168,101,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="hero-grid">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -134,7 +144,7 @@ export default function HomePage() {
             <h1
               style={{
                 fontFamily:    'var(--font-serif)',
-                fontSize:      'clamp(42px, 7vw, 80px)',
+                fontSize:      'clamp(40px, 5.3vw, 68px)',
                 fontWeight:    800,
                 letterSpacing: '-0.03em',
                 lineHeight:    'var(--leading-tight)',
@@ -183,6 +193,20 @@ export default function HomePage() {
               ))}
             </div>
           </motion.div>
+
+          {heroCovers.length > 0 && (
+            <div className="hero-collage" aria-hidden="true">
+              {heroCovers.map((src, i) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt=""
+                  className={`hero-collage-img hero-collage-img--${i}`}
+                />
+              ))}
+            </div>
+          )}
+          </div>
         </div>
       </section>
 
