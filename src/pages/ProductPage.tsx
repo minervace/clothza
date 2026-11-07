@@ -5,9 +5,9 @@
 // ============================================================
 
 import { useParams, Link } from 'react-router-dom';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Heart, ShoppingCart, Truck, RotateCcw, Shield } from 'lucide-react';
+import { Star, Heart, ShoppingCart, Truck, RotateCcw, Shield, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition, SectionReveal } from '@/components/layout/PageTransition';
 import { ProductCard } from '@/components/commerce/ProductCard';
@@ -36,6 +36,14 @@ export default function ProductPage() {
   // Image gallery
   const [activeImage, setActiveImage]   = useState(0);
   const [imgLoaded,   setImgLoaded]     = useState(false);
+  const touchStartX = useRef<number | null>(null);
+
+  const imageCount = product?.images.length ?? 0;
+  const goToImage = (next: number) => {
+    if (imageCount < 2) return;
+    setImgLoaded(false);
+    setActiveImage(((next % imageCount) + imageCount) % imageCount);
+  };
 
   // Variant selectors
   const [selectedSize,  setSelectedSize]  = useState('');
@@ -138,7 +146,25 @@ export default function ProductPage() {
           {/* Left: Image gallery */}
           <div>
             {/* Main image */}
-            <div style={{ position: 'relative', borderRadius: 'var(--radius-xl)', overflow: 'hidden', background: 'var(--bg-secondary)' }} className="aspect-product">
+            <div
+              className="aspect-product gallery-stage"
+              role="group"
+              aria-roledescription="carousel"
+              aria-label={`${product.name} images`}
+              tabIndex={0}
+              onKeyDown={e => {
+                if (e.key === 'ArrowRight') { e.preventDefault(); goToImage(activeImage + 1); }
+                if (e.key === 'ArrowLeft')  { e.preventDefault(); goToImage(activeImage - 1); }
+              }}
+              onTouchStart={e => { touchStartX.current = e.touches[0]?.clientX ?? null; }}
+              onTouchEnd={e => {
+                const start = touchStartX.current;
+                touchStartX.current = null;
+                if (start === null) return;
+                const delta = (e.changedTouches[0]?.clientX ?? start) - start;
+                if (Math.abs(delta) > 40) goToImage(activeImage + (delta < 0 ? 1 : -1));
+              }}
+            >
               {!imgLoaded && <Skeleton height="100%" style={{ borderRadius: 0 }} />}
               <AnimatePresence mode="wait">
                 <motion.img
@@ -147,6 +173,7 @@ export default function ProductPage() {
                   alt={`${product.name} — view ${activeImage + 1}`}
                   loading="eager"
                   decoding="async"
+                  draggable={false}
                   onLoad={() => setImgLoaded(true)}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -155,6 +182,30 @@ export default function ProductPage() {
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                 />
               </AnimatePresence>
+
+              {imageCount > 1 && (
+                <>
+                  <button
+                    type="button"
+                    className="gallery-nav gallery-nav--prev"
+                    aria-label="Previous image"
+                    onClick={() => goToImage(activeImage - 1)}
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    className="gallery-nav gallery-nav--next"
+                    aria-label="Next image"
+                    onClick={() => goToImage(activeImage + 1)}
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                  <span className="gallery-counter" aria-hidden="true">
+                    {activeImage + 1} / {imageCount}
+                  </span>
+                </>
+              )}
             </div>
 
             {/* Thumbnail strip */}
@@ -163,22 +214,24 @@ export default function ProductPage() {
                 {product.images.map((img, i) => (
                   <button
                     key={i}
-                    onClick={() => { setActiveImage(i); setImgLoaded(false); }}
+                    onClick={() => goToImage(i)}
                     aria-label={`View image ${i + 1}`}
                     aria-pressed={activeImage === i}
+                    className="gallery-thumb"
                     style={{
-                      width:        70,
-                      height:       88,
+                      width:        76,
+                      height:       96,
                       borderRadius: 'var(--radius-md)',
                       overflow:     'hidden',
+                      background:   'var(--bg-secondary)',
                       border:       `2px solid ${activeImage === i ? 'var(--accent)' : 'var(--border)'}`,
                       padding:      0,
                       cursor:       'pointer',
                       flexShrink:   0,
-                      transition:   'border-color var(--dur-fast) var(--spring)',
+                      transition:   'border-color var(--dur-fast) var(--spring), transform var(--dur-fast) var(--spring)',
                     }}
                   >
-                    <img src={optimizeImageUrl(img, 140, 176)} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={optimizeImageUrl(img, 152, 192)} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </button>
                 ))}
               </div>
