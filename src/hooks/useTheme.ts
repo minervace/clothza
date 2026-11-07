@@ -1,46 +1,37 @@
 // ============================================================
 // hooks/useTheme.ts — Clothza v4.0
-// Dark/light mode toggle with localStorage persistence
-// No flash on initial load (reads class from <html> element)
+// Light / dark / system theme with localStorage persistence
+// No flash on initial load (index.html applies the theme first)
 // ============================================================
 
 import { useState, useEffect, useCallback } from 'react';
 
-type Theme = 'light' | 'dark';
+export type ThemePreference = 'light' | 'dark' | 'system';
+export type ResolvedTheme = 'light' | 'dark';
 
 const STORAGE_KEY = 'clothza_theme';
 
-/**
- * Reads the system preference for dark mode.
- */
-const getSystemTheme = (): Theme => {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-};
+const darkQuery = (): MediaQueryList => window.matchMedia('(prefers-color-scheme: dark)');
 
-/**
- * Reads the saved theme from localStorage, falling back to system preference.
- */
-const getSavedTheme = (): Theme => {
+const getSystemTheme = (): ResolvedTheme => (darkQuery().matches ? 'dark' : 'light');
+
+const getSavedPreference = (): ThemePreference => {
   try {
-    const saved = window.localStorage.getItem(STORAGE_KEY) as Theme | null;
-    return saved === 'light' || saved === 'dark' ? saved : getSystemTheme();
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark' || saved === 'system') return saved;
   } catch {
-    return getSystemTheme();
+    // Storage unavailable — fall through to system
   }
+  return 'system';
 };
 
-/**
- * Apply theme class to <html> element and persist to localStorage.
- */
-const applyTheme = (theme: Theme): void => {
-  const html = document.documentElement;
-  if (theme === 'dark') {
-    html.classList.add('dark');
-  } else {
-    html.classList.remove('dark');
-  }
+const applyTheme = (theme: ResolvedTheme): void => {
+  document.documentElement.classList.toggle('dark', theme === 'dark');
+};
+
+const persist = (preference: ThemePreference): void => {
   try {
-    window.localStorage.setItem(STORAGE_KEY, theme);
+    window.localStorage.setItem(STORAGE_KEY, preference);
   } catch {
     // Silently fail
   }
@@ -48,50 +39,53 @@ const applyTheme = (theme: Theme): void => {
 
 /**
  * Custom hook for theme management.
- * Returns: [theme, toggleTheme, setTheme]
  *
- * Usage:
- *   const { theme, toggleTheme, isDark } = useTheme();
+ * `preference` is what the user picked (light / dark / system);
+ * `theme` is the resolved scheme actually applied.
  */
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    // Read from DOM (set by inline script in index.html or previous session)
-    const htmlClass = document.documentElement.classList.contains('dark');
-    return htmlClass ? 'dark' : getSavedTheme();
-  });
+  const [preference, setPreferenceState] = useState<ThemePreference>(getSavedPreference);
+  const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(getSystemTheme);
 
-  // Apply theme on mount and whenever it changes
+  const theme: ResolvedTheme = preference === 'system' ? systemTheme : preference;
+
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
 
-  // Listen for system theme changes
+  // Track the OS scheme so 'system' follows it live
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e: MediaQueryListEvent) => {
-      // Only update if user hasn't manually set a preference
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (!saved) {
-        setThemeState(e.matches ? 'dark' : 'light');
-      }
-    };
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    const mql = darkQuery();
+    const onChange = (e: MediaQueryListEvent) => setSystemTheme(e.matches ? 'dark' : 'light');
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
   }, []);
 
-  const setTheme = useCallback((newTheme: Theme) => {
-    setThemeState(newTheme);
+  const setTheme = useCallback((next: ThemePreference) => {
+    setPreferenceState(next);
+    persist(next);
+  }, []);
+
+  const cycleTheme = useCallback(() => {
+    setPreferenceState(prev => {
+      const next: ThemePreference = prev === 'light' ? 'dark' : prev === 'dark' ? 'system' : 'light';
+      persist(next);
+      return next;
+    });
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setThemeState(prev => (prev === 'dark' ? 'light' : 'dark'));
-  }, []);
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
 
   return {
+    preference,
     theme,
     isDark: theme === 'dark',
     isLight: theme === 'light',
-    toggleTheme,
+    isSystem: preference === 'system',
     setTheme,
+    cycleTheme,
+    toggleTheme,
   };
 }

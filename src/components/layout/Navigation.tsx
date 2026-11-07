@@ -10,16 +10,29 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, Sun, Moon, Heart, ShoppingCart, User,
   LogOut, LayoutDashboard, ShieldCheck, Package,
-  Home, BookOpen, Sparkles, ChevronDown,
+  Home, BookOpen, Sparkles, ChevronDown, Monitor,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useMarketplace } from '@/hooks/useMarketplace';
+import type { ThemePreference } from '@/hooks/useTheme';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useDebounce } from '@/hooks/useDebounce';
 
+const THEME_LABELS: Record<ThemePreference, string> = {
+  light: 'Light',
+  dark: 'Dark',
+  system: 'Auto',
+};
+
+const THEME_NEXT: Record<ThemePreference, ThemePreference> = {
+  light: 'dark',
+  dark: 'system',
+  system: 'light',
+};
+
 export function Navigation() {
   const {
-    state, isDark, toggleTheme, cartCount, logout,
+    state, themePreference, cycleTheme, cartCount, logout,
     searchAll,
   } = useMarketplace();
   const { currentUser, favorites } = state;
@@ -231,36 +244,29 @@ export function Navigation() {
               </AnimatePresence>
             </div>
 
-            {/* Theme toggle */}
+            {/* Theme: light → dark → auto */}
             <motion.button
               className="btn btn-ghost btn-icon"
-              aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-              onClick={toggleTheme}
+              aria-label={`Theme: ${THEME_LABELS[themePreference]}. Switch to ${THEME_LABELS[THEME_NEXT[themePreference]]}.`}
+              title={`Theme: ${THEME_LABELS[themePreference]}`}
+              onClick={cycleTheme}
               whileTap={{ rotate: 20, scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
               <AnimatePresence mode="wait" initial={false}>
-                {isDark ? (
-                  <motion.span key="sun"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0,   opacity: 1 }}
-                    exit={{    rotate:  90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    style={{ display: 'flex' }}
-                  >
-                    <Sun size={17} />
-                  </motion.span>
-                ) : (
-                  <motion.span key="moon"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0,  opacity: 1 }}
-                    exit={{    rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    style={{ display: 'flex' }}
-                  >
-                    <Moon size={17} />
-                  </motion.span>
-                )}
+                <motion.span key={themePreference}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0,   opacity: 1 }}
+                  exit={{    rotate:  90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  style={{ display: 'flex' }}
+                >
+                  {themePreference === 'system'
+                    ? <Monitor size={17} />
+                    : themePreference === 'dark'
+                      ? <Moon size={17} />
+                      : <Sun size={17} />}
+                </motion.span>
               </AnimatePresence>
             </motion.button>
 
@@ -440,7 +446,7 @@ export function Navigation() {
       </nav>
 
       {/* ── Mobile Bottom Tab Bar ───────────────────────── */}
-      <MobileTabBar cartCount={cartCount} favCount={favCount} isDark={isDark} onToggleTheme={toggleTheme} />
+      <MobileTabBar cartCount={cartCount} favCount={favCount} themePreference={themePreference} onCycleTheme={cycleTheme} />
     </>
   );
 }
@@ -476,7 +482,7 @@ function DropdownItem({ icon, label, to }: { icon: React.ReactNode; label: strin
 
 // ── Mobile Bottom Tab Bar ────────────────────────────────────
 
-function MobileTabBar({ cartCount: _cartCount, favCount, isDark, onToggleTheme }: { cartCount: number; favCount: number; isDark: boolean; onToggleTheme: () => void }) {
+function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycleTheme }: { cartCount: number; favCount: number; themePreference: ThemePreference; onCycleTheme: () => void }) {
   const location = useLocation();
 
   const tabs = [
@@ -519,14 +525,17 @@ function MobileTabBar({ cartCount: _cartCount, favCount, isDark, onToggleTheme }
       })}
       <button
         type="button"
-        onClick={onToggleTheme}
+        onClick={onCycleTheme}
         className="bottom-tab-item"
-        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-        aria-pressed={isDark}
+        aria-label={`Theme: ${THEME_LABELS[themePreference]}. Switch to ${THEME_LABELS[THEME_NEXT[themePreference]]}.`}
         style={{ background: 'none', border: 'none', font: 'inherit' }}
       >
-        {isDark ? <Sun size={22} /> : <Moon size={22} />}
-        <span className="bottom-tab-label">{isDark ? 'Light' : 'Dark'}</span>
+        {themePreference === 'system'
+          ? <Monitor size={22} />
+          : themePreference === 'dark'
+            ? <Moon size={22} />
+            : <Sun size={22} />}
+        <span className="bottom-tab-label">{THEME_LABELS[themePreference]}</span>
       </button>
     </div>
   );

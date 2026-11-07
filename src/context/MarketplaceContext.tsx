@@ -13,7 +13,7 @@ import React, {
   type ReactNode,
 } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme, type ThemePreference } from '@/hooks/useTheme';
 import supabase, { isSupabaseConfigured } from '@/lib/supabase';
 import { generateId, generateTrackingId } from '@/lib/crypto';
 import { calcOrderTotal, applyCoupon } from '@/lib/formatters';
@@ -1202,8 +1202,11 @@ export interface MarketplaceContextValue {
 
   // Theme
   theme: string;
+  themePreference: ThemePreference;
   isDark: boolean;
+  isSystemTheme: boolean;
   toggleTheme: () => void;
+  cycleTheme: () => void;
 
   // Auth Actions
   login: (email: string, password: string) => boolean;
@@ -1284,7 +1287,10 @@ const MarketplaceContext = createContext<MarketplaceContextValue | null>(null);
 
 export function MarketplaceProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { theme, isDark, toggleTheme } = useTheme();
+  const {
+    theme, preference: themePreference, isDark, isSystem: isSystemTheme,
+    toggleTheme, cycleTheme,
+  } = useTheme();
 
   // Persist cart and favorites to localStorage
   const [savedCart, setSavedCart] = useLocalStorage<CartItem[]>('clothza_cart', []);
@@ -1722,8 +1728,11 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   const value = useMemo<MarketplaceContextValue>(() => ({
     state,
     theme,
+    themePreference,
     isDark,
+    isSystemTheme,
     toggleTheme,
+    cycleTheme,
     login,
     logout,
     addToCart,
@@ -1766,7 +1775,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     getFeaturedStores,
     searchAll,
   }), [
-    state, theme, isDark, toggleTheme,
+    state, theme, themePreference, isDark, isSystemTheme, toggleTheme, cycleTheme,
     login, logout,
     addToCart, removeFromCart, updateCartQuantity, clearCart, cartCount, cartSubtotal,
     toggleFavoriteProduct, toggleFavoriteStore, isFavoriteProduct, isFavoriteStore,
