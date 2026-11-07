@@ -21,6 +21,7 @@ import { TierBadge, OrderStatusBadge } from '@/components/ui/Badge';
 import { toast } from '@/lib/toast';
 import { formatPrice, formatDate, formatCountdown } from '@/lib/formatters';
 import { verifyAdminPassword } from '@/lib/crypto';
+import { DEMO_CREDENTIALS } from '@/lib/constants';
 import { haptic } from '@/lib/haptics';
 
 type AdminTab = 'stats' | 'users' | 'stores' | 'orders';
@@ -118,7 +119,7 @@ export default function AdminPage() {
                   value={passcode}
                   onChange={e => setPasscode(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter') handleAuth(); }}
-                  hint="Default: clothza-admin-2024"
+                  hint={`Default: ${DEMO_CREDENTIALS.admin.passcode}`}
                   autoFocus
                 />
                 {attemptsRemaining < 5 && (

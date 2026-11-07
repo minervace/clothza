@@ -134,7 +134,7 @@ export default function ProductPage() {
         </nav>
 
         {/* Main product grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'start' }}>
+        <div className="product-layout">
           {/* Left: Image gallery */}
           <div>
             {/* Main image */}

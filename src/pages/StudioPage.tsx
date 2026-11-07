@@ -145,7 +145,7 @@ export default function StudioPage() {
       </div>
 
       <div className="container" style={{ paddingTop: 32, paddingBottom: 80 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 40, alignItems: 'start' }}>
+        <div className="studio-layout">
           {/* Product browser */}
           <div>
             <div style={{ marginBottom: 20 }}>

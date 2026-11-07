@@ -360,7 +360,6 @@ const BASE_PRODUCTS: Product[] = [
     tags: ['trousers', 'wide-leg', 'minimalist', 'tailored'],
     images: [
       optimizeImageUrl('https://images.unsplash.com/photo-1506629082955-511b1aa562c8', 600, 800),
-      optimizeImageUrl('https://images.unsplash.com/photo-1594938298603-c8148c4b3c35', 600, 800),
     ],
     variants: [
       { size: '24', color: 'Black',    stock: 5 },
@@ -492,7 +491,6 @@ const BASE_PRODUCTS: Product[] = [
     category: 'Men',
     tags: ['cargo', 'streetwear', 'technical', 'gender-neutral', 'limited'],
     images: [
-      optimizeImageUrl('https://images.unsplash.com/photo-1591195853828-11db59a44f43', 600, 800),
       optimizeImageUrl('https://images.unsplash.com/photo-1578932750294-f5075e85f44a', 600, 800),
       optimizeImageUrl('https://images.unsplash.com/photo-1548126032-079a0fb0099d', 600, 800),
     ],
@@ -526,8 +524,8 @@ const BASE_PRODUCTS: Product[] = [
     category: 'Women',
     tags: ['hoodie', 'oversized', 'streetwear', 'graphic', 'gender-neutral'],
     images: [
-      optimizeImageUrl('https://images.unsplash.com/photo-1556821840-3a63f15732ce', 600, 800),
-      optimizeImageUrl('https://images.unsplash.com/photo-1578452276832-f46d25f7474b', 600, 800),
+      optimizeImageUrl('https://images.unsplash.com/photo-1515886657613-9f3515b0c78f', 600, 800),
+      optimizeImageUrl('https://images.unsplash.com/photo-1614786269829-d24616faf56d', 600, 800),
     ],
     variants: [
       { size: 'One Size', color: 'Ash Grey',  stock: 30 },
@@ -554,7 +552,7 @@ const BASE_PRODUCTS: Product[] = [
     category: 'Accessories',
     tags: ['vest', 'tactical', 'utility', 'streetwear', 'layering'],
     images: [
-      optimizeImageUrl('https://images.unsplash.com/photo-1600185365778-24e37f9cce7c', 600, 800),
+      optimizeImageUrl('https://images.unsplash.com/photo-1520975916090-3105956dac38', 600, 800),
       optimizeImageUrl('https://images.unsplash.com/photo-1620799140408-edc6dcb6d633', 600, 800),
     ],
     variants: [
@@ -586,7 +584,6 @@ const BASE_PRODUCTS: Product[] = [
     images: [
       optimizeImageUrl('https://images.unsplash.com/photo-1548036328-c9fa89d128fa', 600, 800),
       optimizeImageUrl('https://images.unsplash.com/photo-1591561954557-26941169b49e', 600, 800),
-      optimizeImageUrl('https://images.unsplash.com/photo-1594938298603-c8148c4b3c35', 600, 800),
     ],
     variants: [
       { size: 'One Size', color: 'Natural Tan',    stock: 4 },

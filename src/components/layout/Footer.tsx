@@ -45,15 +45,7 @@ export function Footer() {
     <footer className="footer" role="contentinfo">
       <div className="container">
         {/* Main grid */}
-        <div
-          style={{
-            display:             'grid',
-            gridTemplateColumns: '1fr 1fr 1fr 1fr',
-            gap:                 48,
-            paddingBottom:       64,
-            borderBottom:        '1px solid var(--border)',
-          }}
-        >
+        <div className="footer-grid">
           {/* Brand column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div>

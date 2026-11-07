@@ -1122,10 +1122,14 @@ button, a, input, select, textarea {
 @media (max-width: 767px) {
   .bottom-tab-bar { display: flex; }
   .nav-wrapper    { display: none; }
+
+  /* Reserve room so the fixed tab bar never covers the end of the page */
+  .app-shell { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
 }
 
 .bottom-tab-item {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1141,6 +1145,13 @@ button, a, input, select, textarea {
 
 .bottom-tab-item.active {
   color: var(--accent);
+}
+
+.bottom-tab-label {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .bottom-tab-item svg {
@@ -1380,13 +1391,50 @@ button, a, input, select, textarea {
   }
 }
 
+/* ── Responsive page layouts ──────────────────────────────── */
+.masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.masonry-grid--single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 900px) {
+  .masonry-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.product-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.studio-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .studio-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+}
+
+@media (max-width: 900px) {
+  .product-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+}
+
 /* Lookbook grid */
 .lookbook-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-5);
 }
-
 @media (max-width: 1024px) {
   .lookbook-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -1939,6 +1987,29 @@ hr {
   font-family: var(--font-serif);
   font-size: 28px;
   font-weight: var(--weight-bold);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 64px;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 520px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding-bottom: 40px;
+  }
 }
 
 .footer-tagline {

@@ -513,7 +513,7 @@ function MobileTabBar({ cartCount: _cartCount, favCount }: { cartCount: number; 
                 {tab.badge > 9 ? '9+' : tab.badge}
               </span>
             )}
-            <span style={{ fontSize: 10 }}>{tab.label}</span>
+            <span className="bottom-tab-label">{tab.label}</span>
           </Link>
         );
       })}

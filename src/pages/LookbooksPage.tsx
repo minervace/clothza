@@ -14,6 +14,7 @@ import { LookbookCard } from '@/components/community/LookbookCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { RankBadge } from '@/components/ui/Badge';
 import { formatCompactNumber } from '@/lib/formatters';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { Lookbook } from '@/context/MarketplaceContext';
 
 type SortKey  = 'trending' | 'newest' | 'most-liked' | 'official';
@@ -27,14 +28,30 @@ const SORT_TABS: Array<{ key: SortKey; label: string; icon: typeof TrendingUp }>
 ];
 
 function MasonryGrid({ lookbooks }: { lookbooks: Lookbook[] }) {
+  const isNarrow = useMediaQuery('(max-width: 640px)');
+
+  // On phones the columns would stack and scramble the ranking order,
+  // so fall back to a single ordered column.
+  if (isNarrow) {
+    return (
+      <div className="masonry-grid masonry-grid--single">
+        {lookbooks.map((lb, i) => (
+          <SectionReveal key={lb.id} delay={(i % 8) * 0.06}>
+            <LookbookCard lookbook={lb} rank={i + 1} />
+          </SectionReveal>
+        ))}
+      </div>
+    );
+  }
+
   // Split into 3 columns for masonry effect
   const columns: Lookbook[][] = [[], [], []];
   lookbooks.forEach((lb, i) => columns[i % 3]!.push(lb));
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, alignItems: 'start' }}>
+    <div className="masonry-grid">
       {columns.map((col, ci) => (
-        <div key={ci} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div key={ci} style={{ display: 'flex', flexDirection: 'column', gap: 20, minWidth: 0 }}>
           {col.map((lb, i) => {
             const globalIdx = ci + i * 3;
             return (
