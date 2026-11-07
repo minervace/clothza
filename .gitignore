@@ -20,6 +20,10 @@ dist-ssr
 # macOS archive artifacts
 ._*
 
+# TypeScript build output
+*.tsbuildinfo
+vite.config.d.ts
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
