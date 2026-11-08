@@ -13,6 +13,7 @@ import { CartDrawer } from '@/components/commerce/CartDrawer';
 import { ClothzaToaster } from '@/components/ui/Toast';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { Skeleton } from '@/components/ui/Skeleton';
+import { RequireRole } from '@/components/auth/RequireRole';
 
 // ── Lazy Pages ────────────────────────────────────────────────
 
@@ -66,8 +67,8 @@ function AnimatedRoutes({
           <Route path="/lookbooks"     element={<Suspense fallback={<PageLoader />}><LookbooksPage /></Suspense>} />
           <Route path="/lookbooks/:id" element={<Suspense fallback={<PageLoader />}><LookbookDetail /></Suspense>} />
           <Route path="/checkout"      element={<Suspense fallback={<PageLoader />}><CheckoutPage /></Suspense>} />
-          <Route path="/dashboard"     element={<Suspense fallback={<PageLoader />}><DashboardPage /></Suspense>} />
-          <Route path="/admin"         element={<Suspense fallback={<PageLoader />}><AdminPage /></Suspense>} />
+          <Route path="/dashboard"     element={<RequireRole roles={['seller', 'admin']}><Suspense fallback={<PageLoader />}><DashboardPage /></Suspense></RequireRole>} />
+          <Route path="/admin"         element={<RequireRole roles={['admin']}><Suspense fallback={<PageLoader />}><AdminPage /></Suspense></RequireRole>} />
           <Route path="/studio"        element={<Suspense fallback={<PageLoader />}><StudioPage /></Suspense>} />
           <Route path="/orders"        element={<Suspense fallback={<PageLoader />}><OrdersPage /></Suspense>} />
           <Route path="/favorites"      element={<Suspense fallback={<PageLoader />}><FavoritesPage /></Suspense>} />

@@ -1236,7 +1236,7 @@ export interface MarketplaceContextValue {
 
   // Auth Actions
   login: (email: string, password: string) => Promise<boolean>;
-  signUp: (email: string, password: string, name: string) => Promise<AuthResult>;
+  signUp: (email: string, password: string, name: string, role?: 'customer' | 'seller') => Promise<AuthResult>;
   logout: () => void;
 
   // Cart Actions
@@ -1444,12 +1444,17 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     return false;
   }, []);
 
-  const signUp = useCallback(async (email: string, password: string, name: string): Promise<AuthResult> => {
+  const signUp = useCallback(async (
+    email: string,
+    password: string,
+    name: string,
+    role: 'customer' | 'seller' = 'customer'
+  ): Promise<AuthResult> => {
     if (!isSupabaseConfigured) {
       return { ok: false, error: 'Accounts are unavailable in demo mode.' };
     }
 
-    const result = await authSignUp(email, password, name);
+    const result = await authSignUp(email, password, name, role);
     if (result.ok && !result.needsConfirmation) {
       const profile = await getSessionUser();
       if (profile) dispatch({ type: 'SET_USER', payload: profile });

@@ -20,6 +20,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
 
   const [mode, setMode] = useState<Mode>('signin');
+  const [accountType, setAccountType] = useState<'customer' | 'seller'>('customer');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,7 +50,7 @@ export default function AuthPage() {
         navigate('/');
       } else {
         if (!name.trim()) { setError('Enter your name.'); return; }
-        const result = await signUp(email.trim(), password, name.trim());
+        const result = await signUp(email.trim(), password, name.trim(), accountType);
         if (!result.ok) {
           setError(result.error ?? 'Could not create the account.');
           return;
@@ -126,14 +127,51 @@ export default function AuthPage() {
         ) : (
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {mode === 'signup' && (
-              <Input
-                label="Name"
-                placeholder="Your name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                autoComplete="name"
-                leftIcon={<UserIcon size={15} />}
-              />
+              <>
+                <Input
+                  label="Name"
+                  placeholder="Your name"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  autoComplete="name"
+                  leftIcon={<UserIcon size={15} />}
+                />
+
+                <div>
+                  <div style={{ fontSize: 'var(--text-caption)', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    I am here to
+                  </div>
+                  <div style={{ display: 'grid', gap: 8 }}>
+                    {([
+                      { value: 'customer', title: 'Shop', desc: 'Browse boutiques, save favourites and order pieces.' },
+                      { value: 'seller',   title: 'Sell', desc: 'Open a boutique, manage inventory and list products.' },
+                    ] as const).map(option => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setAccountType(option.value)}
+                        aria-pressed={accountType === option.value}
+                        style={{
+                          textAlign: 'left',
+                          padding: '12px 14px',
+                          borderRadius: 'var(--radius-lg)',
+                          border: `1.5px solid ${accountType === option.value ? 'var(--accent)' : 'var(--border)'}`,
+                          background: accountType === option.value ? 'var(--accent-light)' : 'transparent',
+                          cursor: 'pointer',
+                          fontFamily: 'var(--font-sans)',
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: 'var(--text-body)' }}>
+                          {option.title}
+                        </div>
+                        <div style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-caption)', marginTop: 2 }}>
+                          {option.desc}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
             )}
             <Input
               label="Email"

@@ -61,13 +61,18 @@ export async function signIn(email: string, password: string): Promise<AuthResul
   return { ok: true };
 }
 
-export async function signUp(email: string, password: string, name: string): Promise<AuthResult> {
+export async function signUp(
+  email: string,
+  password: string,
+  name: string,
+  role: 'customer' | 'seller' = 'customer'
+): Promise<AuthResult> {
   if (!isSupabaseConfigured) return { ok: false, error: 'Supabase is not configured' };
 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    options: { data: { name } },
+    options: { data: { name, role } },
   });
 
   if (error) return { ok: false, error: error.message };
