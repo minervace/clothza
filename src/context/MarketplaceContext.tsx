@@ -17,6 +17,12 @@ import { useTheme, type ThemePreference } from '@/hooks/useTheme';
 import supabase, { isSupabaseConfigured } from '@/lib/supabase';
 import { fetchCatalog } from '@/lib/supabaseData';
 import {
+  persistFavoriteProduct,
+  persistFavoriteStore,
+  persistOrder,
+  persistReview,
+} from '@/lib/supabaseWrites';
+import {
   signIn as authSignIn,
   signUp as authSignUp,
   signOut as authSignOut,
@@ -1512,12 +1518,16 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   // ── Favorites Actions ────────────────────────────────────
 
   const toggleFavoriteProduct = useCallback((productId: string) => {
+    const isFavorite = !state.favorites.products.includes(productId);
     dispatch({ type: 'TOGGLE_FAVORITE_PRODUCT', payload: productId });
-  }, []);
+    void persistFavoriteProduct(state.currentUser?.id, productId, isFavorite);
+  }, [state.favorites.products, state.currentUser]);
 
   const toggleFavoriteStore = useCallback((storeId: string) => {
+    const isFavorite = !state.favorites.stores.includes(storeId);
     dispatch({ type: 'TOGGLE_FAVORITE_STORE', payload: storeId });
-  }, []);
+    void persistFavoriteStore(state.currentUser?.id, storeId, isFavorite);
+  }, [state.favorites.stores, state.currentUser]);
 
   const isFavoriteProduct = useCallback(
     (productId: string) => state.favorites.products.includes(productId),
@@ -1576,6 +1586,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
     dispatch({ type: 'ADD_ORDER', payload: order });
     dispatch({ type: 'CLEAR_CART' });
+    void persistOrder(order);
     return order;
   }, [state.products, state.coupons, state.currentUser]);
 
@@ -1634,6 +1645,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
       createdAt: new Date().toISOString(),
     };
     dispatch({ type: 'ADD_REVIEW', payload: newReview });
+    void persistReview(newReview);
   }, []);
 
   // ── Message Actions ──────────────────────────────────────
