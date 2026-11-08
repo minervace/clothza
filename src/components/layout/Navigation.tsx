@@ -17,6 +17,7 @@ import { useMarketplace } from '@/hooks/useMarketplace';
 import type { ThemePreference } from '@/hooks/useTheme';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useDebounce } from '@/hooks/useDebounce';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 const THEME_LABELS: Record<ThemePreference, string> = {
   light: 'Light',
@@ -429,12 +430,14 @@ export function Navigation() {
                       </>
                     ) : (
                       <div style={{ padding: '12px 8px', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                        <Link to="/dashboard" className="btn btn-primary" style={{ textAlign: 'center' }} onClick={() => setUserMenuOpen(false)}>
+                        <Link to="/signin" className="btn btn-primary" style={{ textAlign: 'center' }} onClick={() => setUserMenuOpen(false)}>
                           Sign in
                         </Link>
-                        <p style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', textAlign: 'center', padding: '0 8px' }}>
-                          demo@clothza.com / demo1234
-                        </p>
+                        {!isSupabaseConfigured && (
+                          <p style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', textAlign: 'center', padding: '0 8px' }}>
+                            demo@clothza.com / demo1234
+                          </p>
+                        )}
                       </div>
                     )}
                   </motion.div>

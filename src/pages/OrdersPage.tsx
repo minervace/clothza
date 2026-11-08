@@ -357,7 +357,7 @@ export default function OrdersPage() {
             title="Sign in to view your orders"
             description="Your order history will appear here after signing in."
             cta="Sign In"
-            ctaLink="/dashboard"
+            ctaLink="/signin"
           />
         </div>
       </PageTransition>

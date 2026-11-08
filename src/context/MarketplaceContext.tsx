@@ -16,6 +16,14 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useTheme, type ThemePreference } from '@/hooks/useTheme';
 import supabase, { isSupabaseConfigured } from '@/lib/supabase';
 import { fetchCatalog } from '@/lib/supabaseData';
+import {
+  signIn as authSignIn,
+  signUp as authSignUp,
+  signOut as authSignOut,
+  getSessionUser,
+  onAuthStateChange,
+  type AuthResult,
+} from '@/lib/supabaseAuth';
 import { generateId, generateTrackingId } from '@/lib/crypto';
 import { calcOrderTotal, applyCoupon } from '@/lib/formatters';
 import { optimizeImageUrl } from '@/lib/formatters';
@@ -1221,7 +1229,8 @@ export interface MarketplaceContextValue {
   cycleTheme: () => void;
 
   // Auth Actions
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  signUp: (email: string, password: string, name: string) => Promise<AuthResult>;
   logout: () => void;
 
   // Cart Actions
@@ -1403,8 +1412,17 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
   // ── Auth Actions ─────────────────────────────────────────
 
-  const login = useCallback((email: string, password: string): boolean => {
-    // Demo login
+  const login = useCallback(async (email: string, password: string): Promise<boolean> => {
+    // Real auth when Supabase is configured
+    if (isSupabaseConfigured) {
+      const result = await authSignIn(email, password);
+      if (!result.ok) return false;
+      const profile = await getSessionUser();
+      if (profile) dispatch({ type: 'SET_USER', payload: profile });
+      return Boolean(profile);
+    }
+
+    // Demo mode — no backend configured
     if (email === 'demo@clothza.com' && password === 'demo1234') {
       const user = BASE_USERS.find(u => u.email === email);
       if (user) {
@@ -1412,7 +1430,6 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
         return true;
       }
     }
-    // Seller logins
     const user = BASE_USERS.find(u => u.email === email);
     if (user) {
       dispatch({ type: 'SET_USER', payload: user });
@@ -1421,8 +1438,35 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     return false;
   }, []);
 
+  const signUp = useCallback(async (email: string, password: string, name: string): Promise<AuthResult> => {
+    if (!isSupabaseConfigured) {
+      return { ok: false, error: 'Accounts are unavailable in demo mode.' };
+    }
+
+    const result = await authSignUp(email, password, name);
+    if (result.ok && !result.needsConfirmation) {
+      const profile = await getSessionUser();
+      if (profile) dispatch({ type: 'SET_USER', payload: profile });
+    }
+    return result;
+  }, []);
+
   const logout = useCallback(() => {
     dispatch({ type: 'SET_USER', payload: null });
+    if (isSupabaseConfigured) void authSignOut();
+  }, []);
+
+  // Restore and follow the Supabase session
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    void getSessionUser().then(user => {
+      if (user) dispatch({ type: 'SET_USER', payload: user });
+    });
+
+    return onAuthStateChange(user => {
+      dispatch({ type: 'SET_USER', payload: user });
+    });
   }, []);
 
   // ── Cart Actions ─────────────────────────────────────────
@@ -1760,6 +1804,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     toggleTheme,
     cycleTheme,
     login,
+    signUp,
     logout,
     addToCart,
     removeFromCart,
@@ -1802,7 +1847,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     searchAll,
   }), [
     state, theme, themePreference, isDark, isSystemTheme, toggleTheme, cycleTheme,
-    login, logout,
+    login, signUp, logout,
     addToCart, removeFromCart, updateCartQuantity, clearCart, cartCount, cartSubtotal,
     toggleFavoriteProduct, toggleFavoriteStore, isFavoriteProduct, isFavoriteStore,
     placeOrder, updateOrderStatus,
