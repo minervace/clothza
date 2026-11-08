@@ -3,7 +3,7 @@
 // Browse page: hero + filters + store/product grids
 // ============================================================
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, X, SlidersHorizontal,
@@ -22,6 +22,15 @@ import type { ProductCategory } from '@/context/MarketplaceContext';
 
 type SortOption = 'relevance' | 'newest' | 'price-asc' | 'price-desc' | 'rating' | 'popular';
 
+const SORT_LABELS: Record<SortOption, string> = {
+  relevance: 'Relevance',
+  newest: 'Newest',
+  'price-asc': 'Price: low to high',
+  'price-desc': 'Price: high to low',
+  rating: 'Top rated',
+  popular: 'Most popular',
+};
+
 const CATEGORIES: Array<ProductCategory | 'All'> = ['All', 'Women', 'Men', 'Accessories', 'Footwear', 'Kids'];
 const VIEW_MODES  = ['stores', 'products', 'lookbooks'] as const;
 type ViewMode = typeof VIEW_MODES[number];
@@ -37,6 +46,22 @@ export default function HomePage() {
   const [priceMax,   setPriceMax] = useState('');
   const [onlyBestSeller, setOnlyBestSeller] = useState(false);
   const [onlyTrending,   setOnlyTrending]   = useState(false);
+
+  // Collapse the toolbar to a single row while scrolling down (phones only)
+  const [compactBar, setCompactBar] = useState(false);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y < 120) setCompactBar(false);
+      else if (y > lastY + 8) setCompactBar(true);
+      else if (y < lastY - 8) setCompactBar(false);
+      lastY = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const debouncedQuery = useDebounce(query, 250);
 
@@ -104,6 +129,14 @@ export default function HomePage() {
     onlyTrending,
     sort !== 'relevance',
   ].filter(Boolean).length;
+
+  const activeChips: Array<{ key: string; label: string; clear: () => void }> = [];
+  if (category !== 'All') activeChips.push({ key: 'cat', label: category, clear: () => setCategory('All') });
+  if (priceMin) activeChips.push({ key: 'min', label: `≥ रू${Number(priceMin).toLocaleString('en-IN')}`, clear: () => setPriceMin('') });
+  if (priceMax) activeChips.push({ key: 'max', label: `≤ रू${Number(priceMax).toLocaleString('en-IN')}`, clear: () => setPriceMax('') });
+  if (onlyBestSeller) activeChips.push({ key: 'best', label: 'Best sellers', clear: () => setOnlyBestSeller(false) });
+  if (onlyTrending) activeChips.push({ key: 'trend', label: 'Trending', clear: () => setOnlyTrending(false) });
+  if (sort !== 'relevance') activeChips.push({ key: 'sort', label: `Sort: ${SORT_LABELS[sort]}`, clear: () => setSort('relevance') });
 
   return (
     <PageTransition>
@@ -211,10 +244,10 @@ export default function HomePage() {
       </section>
 
       {/* ── Search + View Toggle Bar ─────────────────────────── */}
-      <div className="browse-toolbar">
+      <div className={compactBar ? 'browse-toolbar browse-toolbar--compact' : 'browse-toolbar'}>
         <div className="container browse-toolbar__inner">
           {/* Search input */}
-          <div style={{ flex: 1, position: 'relative', minWidth: 220 }}>
+          <div className="browse-search" style={{ flex: 1, position: 'relative', minWidth: 220 }}>
             <Search size={15} color="var(--text-tertiary)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
             <input
               id="home-search"
@@ -233,6 +266,14 @@ export default function HomePage() {
           </div>
 
           <div className="browse-toolbar__controls">
+          <button
+            type="button"
+            className="browse-compact-search"
+            aria-label="Show search"
+            onClick={() => { setCompactBar(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          >
+            <Search size={15} />
+          </button>
           {/* View mode pills */}
           <div className="browse-toolbar__tabs" style={{ display: 'flex', gap: 2, background: 'var(--bg-secondary)', padding: '3px', borderRadius: 'var(--radius-lg)' }}>
             {VIEW_MODES.map(v => (
@@ -295,6 +336,25 @@ export default function HomePage() {
           </select>
           </div>
         </div>
+
+        {activeChips.length > 0 && view === 'products' && (
+          <div className="container">
+            <div className="browse-toolbar__chips">
+              {activeChips.map(chip => (
+                <button
+                  key={chip.key}
+                  type="button"
+                  className="chip"
+                  onClick={chip.clear}
+                  aria-label={`Clear filter: ${chip.label}`}
+                >
+                  {chip.label}
+                  <X size={11} />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Filter panel */}
         <AnimatePresence>
