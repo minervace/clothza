@@ -15,6 +15,7 @@ import React, {
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useTheme, type ThemePreference } from '@/hooks/useTheme';
 import supabase, { isSupabaseConfigured } from '@/lib/supabase';
+import { fetchCatalog } from '@/lib/supabaseData';
 import { generateId, generateTrackingId } from '@/lib/crypto';
 import { calcOrderTotal, applyCoupon } from '@/lib/formatters';
 import { optimizeImageUrl } from '@/lib/formatters';
@@ -958,6 +959,9 @@ type Action =
   // Stores
   | { type: 'UPDATE_STORE'; payload: Partial<Store> & { id: string } }
 
+  // Catalog (loaded from Supabase)
+  | { type: 'HYDRATE_CATALOG'; payload: { stores: Store[]; products: Product[]; lookbooks: Lookbook[] } }
+
   // Lookbooks
   | { type: 'ADD_LOOKBOOK'; payload: Lookbook }
   | { type: 'LIKE_LOOKBOOK'; payload: string }
@@ -985,6 +989,14 @@ type Action =
 
 function reducer(state: MarketplaceState, action: Action): MarketplaceState {
   switch (action.type) {
+    case 'HYDRATE_CATALOG':
+      return {
+        ...state,
+        stores: action.payload.stores,
+        products: action.payload.products,
+        lookbooks: action.payload.lookbooks,
+      };
+
     case 'SET_USER':
       return { ...state, currentUser: action.payload };
 
@@ -1299,6 +1311,20 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     { products: [], stores: [] }
   );
   const [savedUser, setSavedUser] = useLocalStorage<User | null>('clothza_user', null);
+
+  // Load the catalog from Supabase when configured; keep seed data otherwise
+  useEffect(() => {
+    let cancelled = false;
+
+    void fetchCatalog().then(catalog => {
+      if (cancelled || !catalog) return;
+      const { stores, products, lookbooks } = catalog;
+      if (stores.length === 0 && products.length === 0 && lookbooks.length === 0) return;
+      dispatch({ type: 'HYDRATE_CATALOG', payload: catalog });
+    });
+
+    return () => { cancelled = true; };
+  }, []);
 
   // Hydrate from localStorage on mount
   useEffect(() => {
