@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig({
+  // GitHub Pages serves project sites from /<repo>/, the APK and dev use /
+  base: process.env.GITHUB_PAGES === 'true' ? '/clothza-the-place/' : '/',
   plugins: [react()],
   resolve: {
     alias: {
