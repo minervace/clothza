@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { toast } from '@/lib/toast';
 import { STORE_THEMES } from '@/lib/constants';
+import { ImageUploadInput } from './ImageUploadInput';
 import type { Store } from '@/context/MarketplaceContext';
 
 interface Props {
@@ -139,20 +140,22 @@ export function StoreSettings({ store, onCreate, onSave }: Props) {
           />
         </div>
 
-        <Input
-          label="Logo image URL"
+        <ImageUploadInput
+          label="Logo image"
           value={form.logo}
-          onChange={e => set('logo', e.target.value)}
-          placeholder="https://…"
+          onChange={url => set('logo', url)}
+          folder="stores"
           hint="Square image, at least 400×400."
+          placeholder="https://…"
         />
 
-        <Input
-          label="Banner image URL"
+        <ImageUploadInput
+          label="Banner image"
           value={form.banner}
-          onChange={e => set('banner', e.target.value)}
-          placeholder="https://…"
+          onChange={url => set('banner', url)}
+          folder="stores"
           hint="Wide image, at least 1200×400."
+          placeholder="https://…"
         />
 
         {(form.logo || form.banner) && (

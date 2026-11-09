@@ -26,6 +26,7 @@ import { optimizeImageUrl } from '@/lib/formatters';
 import type { Product, OrderStatus } from '@/context/MarketplaceContext';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
 import { StoreSettings } from '@/components/seller/StoreSettings';
+import { ImageUploadInput } from '@/components/seller/ImageUploadInput';
 
 type DashTab = 'overview' | 'products' | 'orders' | 'messages' | 'coupons' | 'store';
 
@@ -294,6 +295,13 @@ function ProductModal({ isOpen, onClose, storeId, editProduct }: ProductModalPro
               marginBottom: 16,
               boxSizing:    'border-box',
             }}
+          />
+          <ImageUploadInput
+            label="Or upload images"
+            value={''}
+            onChange={url => set('images', form.images ? `${form.images}\n${url}` : url)}
+            folder="products"
+            hint="Uploads go to Supabase Storage and append their link here."
           />
         </div>
 
