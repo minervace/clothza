@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   // GitHub Pages serves project sites from /<repo>/, the APK and dev use /
-  base: process.env.GITHUB_PAGES === 'true' ? '/clothza-the-place/' : '/',
+  base: process.env.GITHUB_PAGES === 'true' ? '/clothza/' : '/',
   plugins: [react()],
   resolve: {
     alias: {
