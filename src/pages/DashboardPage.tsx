@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Package, ShoppingBag, MessageCircle,
   Tag, BarChart2, Plus, Pencil, Trash2,
-  DollarSign, Star, Check,
+  DollarSign, Star, Check, Store,
   ChevronDown,
 } from 'lucide-react';
 import { useMarketplace } from '@/hooks/useMarketplace';
@@ -25,8 +25,9 @@ import { haptic } from '@/lib/haptics';
 import { optimizeImageUrl } from '@/lib/formatters';
 import type { Product, OrderStatus } from '@/context/MarketplaceContext';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
+import { StoreSettings } from '@/components/seller/StoreSettings';
 
-type DashTab = 'overview' | 'products' | 'orders' | 'messages' | 'coupons';
+type DashTab = 'overview' | 'products' | 'orders' | 'messages' | 'coupons' | 'store';
 
 const TABS: Array<{ id: DashTab; label: string; icon: typeof Package }> = [
   { id: 'overview',  label: 'Overview',  icon: BarChart2     },
@@ -34,6 +35,7 @@ const TABS: Array<{ id: DashTab; label: string; icon: typeof Package }> = [
   { id: 'orders',    label: 'Orders',    icon: ShoppingBag   },
   { id: 'messages',  label: 'Messages',  icon: MessageCircle },
   { id: 'coupons',   label: 'Coupons',   icon: Tag           },
+  { id: 'store',     label: 'Store',     icon: Store         },
 ];
 
 const ORDER_STATUSES: OrderStatus[] = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
@@ -547,6 +549,7 @@ export default function DashboardPage() {
   const {
     state, getStore, getStoreProducts, getStoreOrders,
     getStoreMessages, deleteProduct, deleteCoupon,
+    createStore, updateStore,
   } = useMarketplace();
   const { currentUser } = state;
 
@@ -574,7 +577,10 @@ export default function DashboardPage() {
     );
   }
 
-  const store    = currentUser.storeId ? getStore(currentUser.storeId) : undefined;
+  // A seller's store may not be linked on the profile row yet — fall back to
+  // ownership, which is what the database uses for access control anyway.
+  const store    = (currentUser.storeId ? getStore(currentUser.storeId) : undefined)
+    ?? state.stores.find(s => s.ownerId === currentUser.id);
   const products = store ? getStoreProducts(store.id) : [];
   const orders   = store ? getStoreOrders(store.id)   : [];
   const messages = store ? getStoreMessages(store.id) : [];
@@ -865,6 +871,12 @@ export default function DashboardPage() {
           )}
 
           {/* Coupons */}
+          {activeTab === 'store' && (
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-6)' }}>
+              <StoreSettings store={store} onCreate={createStore} onSave={updateStore} />
+            </div>
+          )}
+
           {activeTab === 'coupons' && (
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>

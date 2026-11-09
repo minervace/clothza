@@ -6,6 +6,7 @@
 
 import React, {
   createContext,
+  useState,
   useReducer,
   useEffect,
   useCallback,
@@ -21,6 +22,11 @@ import {
   persistFavoriteStore,
   persistOrder,
   persistReview,
+  persistProductInsert,
+  persistProductUpdate,
+  persistProductDelete,
+  persistStoreUpdate,
+  persistStoreInsert,
 } from '@/lib/supabaseWrites';
 import {
   signIn as authSignIn,
@@ -31,7 +37,7 @@ import {
   type AuthResult,
 } from '@/lib/supabaseAuth';
 import { generateId, generateTrackingId } from '@/lib/crypto';
-import { calcOrderTotal, applyCoupon } from '@/lib/formatters';
+import { calcOrderTotal, applyCoupon, slugify } from '@/lib/formatters';
 import { optimizeImageUrl } from '@/lib/formatters';
 
 // ── Type Definitions ─────────────────────────────────────────
@@ -971,6 +977,7 @@ type Action =
   | { type: 'DELETE_PRODUCT'; payload: string }
 
   // Stores
+  | { type: 'ADD_STORE'; payload: Store }
   | { type: 'UPDATE_STORE'; payload: Partial<Store> & { id: string } }
 
   // Catalog (loaded from Supabase)
@@ -1147,6 +1154,9 @@ function reducer(state: MarketplaceState, action: Action): MarketplaceState {
         ),
       };
 
+    case 'ADD_STORE':
+      return { ...state, stores: [action.payload, ...state.stores] };
+
     case 'ADD_LOOKBOOK':
       return { ...state, lookbooks: [action.payload, ...state.lookbooks] };
 
@@ -1225,6 +1235,7 @@ const initialState: MarketplaceState = {
 export interface MarketplaceContextValue {
   // State
   state: MarketplaceState;
+  authReady: boolean;
 
   // Theme
   theme: string;
@@ -1269,6 +1280,10 @@ export interface MarketplaceContextValue {
 
   // Store Actions
   updateStore: (store: Partial<Store> & { id: string }) => void;
+  createStore: (
+    data: Pick<Store, 'name' | 'description' | 'logo' | 'banner' | 'location' | 'theme'> &
+      Partial<Pick<Store, 'instagram' | 'whatsapp'>>
+  ) => Store | null;
 
   // Lookbook Actions
   addLookbook:  (lookbook: Omit<Lookbook, 'id' | 'createdAt' | 'likes' | 'views'>) => void;
@@ -1327,6 +1342,10 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   );
   const [savedUser, setSavedUser] = useLocalStorage<User | null>('clothza_user', null);
 
+  // False until the saved session / Supabase session has been restored, so
+  // route guards do not bounce a signed-in user to /signin on refresh.
+  const [authReady, setAuthReady] = useState(false);
+
   // Load the catalog from Supabase when configured; keep seed data otherwise
   useEffect(() => {
     let cancelled = false;
@@ -1348,9 +1367,9 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
       dispatch({ type: 'SET_FAVORITES', payload: savedFavorites });
     }
     if (savedUser) dispatch({ type: 'SET_USER', payload: savedUser });
+    setAuthReady(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   // Sync cart to localStorage
   useEffect(() => {
     setSavedCart(state.cart);
@@ -1471,9 +1490,9 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isSupabaseConfigured) return;
 
-    void getSessionUser().then(user => {
-      if (user) dispatch({ type: 'SET_USER', payload: user });
-    });
+    void getSessionUser()
+      .then(user => { if (user) dispatch({ type: 'SET_USER', payload: user }); })
+      .finally(() => setAuthReady(true));
 
     return onAuthStateChange(user => {
       dispatch({ type: 'SET_USER', payload: user });
@@ -1608,21 +1627,55 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
       createdAt: new Date().toISOString(),
     };
     dispatch({ type: 'ADD_PRODUCT', payload: newProduct });
-  }, []);
+    void persistProductInsert(state.currentUser?.id, newProduct);
+  }, [state.currentUser]);
 
   const updateProduct = useCallback((product: Partial<Product> & { id: string }) => {
     dispatch({ type: 'UPDATE_PRODUCT', payload: product });
+    void persistProductUpdate(product);
   }, []);
 
   const deleteProduct = useCallback((id: string) => {
     dispatch({ type: 'DELETE_PRODUCT', payload: id });
+    void persistProductDelete(id);
   }, []);
 
   // ── Store Actions ────────────────────────────────────────
 
   const updateStore = useCallback((store: Partial<Store> & { id: string }) => {
     dispatch({ type: 'UPDATE_STORE', payload: store });
+    void persistStoreUpdate(store);
   }, []);
+
+  const createStore = useCallback((
+    data: Pick<Store, 'name' | 'description' | 'logo' | 'banner' | 'location' | 'theme'> &
+      Partial<Pick<Store, 'instagram' | 'whatsapp'>>
+  ): Store | null => {
+    const user = state.currentUser;
+    if (!user) return null;
+
+    const now = new Date().toISOString();
+    const store: Store = {
+      ...data,
+      id:            generateId(),
+      ownerId:       user.id,
+      slug:          slugify(data.name),
+      isFeatured:    false,
+      isSponsored:   false,
+      views:         0,
+      clicks:        0,
+      rating:        0,
+      reviewCount:   0,
+      subscriptionTier: 'free',
+      subscriptionExpiresAt: now,
+      createdAt:     now,
+    };
+
+    dispatch({ type: 'ADD_STORE', payload: store });
+    dispatch({ type: 'UPDATE_USER', payload: { storeId: store.id } });
+    void persistStoreInsert(user.id, store);
+    return store;
+  }, [state.currentUser]);
 
   // ── Lookbook Actions ─────────────────────────────────────
 
@@ -1814,6 +1867,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<MarketplaceContextValue>(() => ({
     state,
+    authReady,
     theme,
     themePreference,
     isDark,
@@ -1839,6 +1893,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     updateProduct,
     deleteProduct,
     updateStore,
+    createStore,
     addLookbook,
     likeLookbook,
     addReview,
@@ -1863,13 +1918,13 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     getFeaturedStores,
     searchAll,
   }), [
-    state, theme, themePreference, isDark, isSystemTheme, toggleTheme, cycleTheme,
+    state, authReady, theme, themePreference, isDark, isSystemTheme, toggleTheme, cycleTheme,
     login, signUp, logout,
     addToCart, removeFromCart, updateCartQuantity, clearCart, cartCount, cartSubtotal,
     toggleFavoriteProduct, toggleFavoriteStore, isFavoriteProduct, isFavoriteStore,
     placeOrder, updateOrderStatus,
     addProduct, updateProduct, deleteProduct,
-    updateStore,
+    updateStore, createStore,
     addLookbook, likeLookbook,
     addReview,
     sendMessage,

@@ -17,8 +17,18 @@ const ROLE_LABEL: Record<Role, string> = {
 };
 
 export function RequireRole({ roles, children }: { roles: Role[]; children: ReactNode }) {
-  const { state } = useMarketplace();
+  const { state, authReady } = useMarketplace();
   const user = state.currentUser;
+
+  // Wait for the stored/Supabase session before deciding anything, otherwise
+  // a signed-in user is redirected to /signin on every refresh.
+  if (!authReady) {
+    return (
+      <div className="container" style={{ padding: '120px 24px', color: 'var(--text-tertiary)' }}>
+        Checking your session…
+      </div>
+    );
+  }
 
   if (!user) return <Navigate to="/signin" replace />;
 
