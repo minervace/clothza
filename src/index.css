@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ── GOOGLE FONTS IMPORT FALLBACK (if not in <head>) ── */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 /* ============================================================
    1. CSS CUSTOM PROPERTIES — DESIGN TOKENS
@@ -13,10 +13,10 @@
 /* ── LIGHT MODE: "Ink on paper" ── */
 :root {
   /* Backgrounds */
-  --bg-primary:      #F7F5F0;   /* Paper */
-  --bg-secondary:    #F0EDE5;   /* Card stock */
-  --bg-tertiary:     #E7E3D8;   /* rules / wells */
-  --bg-card:         #FCFBF8;
+  --bg-primary:      #FAF7F0;   /* Warm paper */
+  --bg-secondary:    #F2EEE4;   /* Card stock */
+  --bg-tertiary:     #EAE5D7;   /* rules / wells */
+  --bg-card:         #FDFBF6;
 
   /* Text */
   --text-primary:    #191612;   /* Ink */
@@ -24,12 +24,12 @@
   --text-tertiary:   #8C8574;   /* faded print */
 
   /* Borders */
-  --border:          #DCD7CA;
+  --border:          #E0DAC9;
   --border-strong:   #191612;   /* ink hairline for primary frames */
 
   /* Accent — madder rust */
-  --accent:          #8F3E14;
-  --accent-hover:    #75320E;
+  --accent:          #94471B;
+  --accent-hover:    #7B3C12;
   --accent-light:    rgba(143, 62, 20, 0.07);
   --accent-fg:       #FCFBF8;
 
@@ -47,7 +47,7 @@
 
   /* Shadows — hairlines carry depth, not blur */
   --shadow-card:     none;
-  --shadow-elevated: 0 16px 40px rgba(25, 22, 18, 0.10);
+  --shadow-elevated: 0 18px 44px rgba(70, 55, 25, 0.10);
   --shadow-glow:     none;
   --shadow-focus:    0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent);
 
@@ -58,10 +58,10 @@
   --tier-gold:       #8A6D1F;
 
   /* Radius — sharper, print-like */
-  --radius-sm:       2px;
-  --radius-md:       4px;
-  --radius-lg:       8px;
-  --radius-xl:       12px;
+  --radius-sm:       4px;
+  --radius-md:       8px;
+  --radius-lg:       14px;
+  --radius-xl:       18px;
   --radius-pill:     9999px;
 
   /* Spacing Scale */
@@ -131,10 +131,10 @@
 /* ── DARK MODE: "Midnight press" ── */
 .dark {
   /* Backgrounds */
-  --bg-primary:      #131110;   /* Ink black */
-  --bg-secondary:    #1B1916;   /* Pressed charcoal */
-  --bg-tertiary:     #262319;   /* wells */
-  --bg-card:         #1B1916;
+  --bg-primary:      #161310;   /* Warm ink black */
+  --bg-secondary:    #1E1A15;   /* Pressed charcoal */
+  --bg-tertiary:     #292419;   /* wells */
+  --bg-card:         #201C16;
 
   /* Text */
   --text-primary:    #EFEAE0;   /* Cream */
@@ -142,11 +142,11 @@
   --text-tertiary:   #7A7365;   /* faded */
 
   /* Borders */
-  --border:          #2C2921;
+  --border:          #332E24;
   --border-strong:   #EFEAE0;
 
   /* Accent — soft copper */
-  --accent:          #D99A62;
+  --accent:          #E0A66B;
   --accent-hover:    #E4AC77;
   --accent-light:    rgba(217, 154, 98, 0.10);
   --accent-fg:       #131110;
@@ -160,8 +160,8 @@
   --warning-light:   rgba(217, 180, 92, 0.10);
 
   /* Glass */
-  --glass-bg:        #131110;
-  --glass-border:    #2C2921;
+  --glass-bg:        #161310;
+  --glass-border:    #332E24;
 
   /* Shadows */
   --shadow-card:     none;
@@ -402,7 +402,7 @@ button, a, input, select, textarea {
 .font-serif {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
-  font-variation-settings: 'opsz' 72;
+  font-variation-settings: 'opsz' 72, 'SOFT' 40, 'WONK' 0;
 }
 
 /* Sans (Modern) — Outfit */
@@ -456,7 +456,7 @@ button, a, input, select, textarea {
   font-family: var(--font-serif);
   font-size: clamp(38px, 6.5vw, var(--text-display));
   font-weight: var(--weight-medium);
-  font-variation-settings: 'opsz' 144;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
   line-height: 1.05;
   letter-spacing: -0.015em;
 }
@@ -1694,7 +1694,7 @@ button, a, input, select, textarea {
 
 .hero-plate-mono {
   font-family: var(--font-serif);
-  font-variation-settings: 'opsz' 144;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
   font-size: 120px;
   font-weight: 500;
   line-height: 1;

@@ -174,7 +174,7 @@ export default function HomePage() {
             <h1
               style={{
                 fontFamily:    'var(--font-serif)',
-                fontVariationSettings: "'opsz' 144",
+                fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1",
                 fontSize:      'clamp(38px, 4.6vw, 60px)',
                 fontWeight:    500,
                 letterSpacing: '-0.015em',
@@ -215,7 +215,7 @@ export default function HomePage() {
                 { label: 'Lookbooks', value: state.lookbooks.length    },
               ].map(item => (
                 <div key={item.label}>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                     {formatCompactNumber(item.value)}
                   </div>
                   <div style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', fontWeight: 500, marginTop: 4 }}>{item.label}</div>
@@ -468,7 +468,7 @@ export default function HomePage() {
                 <div style={{ marginBottom: 24 }}>
                   <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>01 — Catalogue</div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                    <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)' }}>
+                    <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)' }}>
                       {debouncedQuery ? `Results for "${debouncedQuery}"` : 'All Boutiques'}
                     </h2>
                     <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
@@ -497,7 +497,7 @@ export default function HomePage() {
               <div style={{ marginBottom: 28 }}>
                 <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>02 — Pieces</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)' }}>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)' }}>
                     {debouncedQuery ? `"${debouncedQuery}"` : 'All Products'}
                   </h2>
                   <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
@@ -525,7 +525,7 @@ export default function HomePage() {
               <div style={{ marginBottom: 28 }}>
                 <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>03 — Lookbooks</div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)' }}>Community Lookbooks</h2>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)' }}>Community Lookbooks</h2>
                   <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
                     {filteredLookbooks.length}
                   </span>

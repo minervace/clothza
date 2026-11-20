@@ -112,7 +112,7 @@ export default function LookbooksPage() {
             <h1
               style={{
                 fontFamily:    'var(--font-serif)',
-                fontVariationSettings: "'opsz' 144",
+                fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1",
                 fontSize:      'clamp(38px, 4.6vw, 60px)',
                 fontWeight:    500,
                 color:         'var(--text-primary)',
@@ -142,7 +142,7 @@ export default function LookbooksPage() {
                 { label: 'Total Likes', value: state.lookbooks.reduce((s, lb) => s + lb.likes, 0) },
               ].map(item => (
                 <div key={item.label}>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                     {formatCompactNumber(item.value)}
                   </div>
                   <div style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', fontWeight: 500, marginTop: 4 }}>{item.label}</div>
