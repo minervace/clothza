@@ -32,6 +32,7 @@ import {
   signIn as authSignIn,
   signUp as authSignUp,
   signOut as authSignOut,
+  signInWithGoogle as authSignInWithGoogle,
   getSessionUser,
   onAuthStateChange,
   type AuthResult,
@@ -1249,6 +1250,7 @@ export interface MarketplaceContextValue {
   // Auth Actions
   login: (email: string, password: string) => Promise<boolean>;
   signUp: (email: string, password: string, name: string, role?: 'customer' | 'seller') => Promise<AuthResult>;
+  loginWithGoogle: () => Promise<AuthResult>;
   logout: () => void;
 
   // Cart Actions
@@ -1478,6 +1480,10 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
       if (profile) dispatch({ type: 'SET_USER', payload: profile });
     }
     return result;
+  }, []);
+
+  const loginWithGoogle = useCallback(async (): Promise<AuthResult> => {
+    return authSignInWithGoogle(window.location.origin + '/signin');
   }, []);
 
   const logout = useCallback(() => {
@@ -1875,6 +1881,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     cycleTheme,
     login,
     signUp,
+    loginWithGoogle,
     logout,
     addToCart,
     removeFromCart,
@@ -1918,7 +1925,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     searchAll,
   }), [
     state, authReady, theme, themePreference, isDark, isSystemTheme, toggleTheme, cycleTheme,
-    login, signUp, logout,
+    login, signUp, loginWithGoogle, logout,
     addToCart, removeFromCart, updateCartQuantity, clearCart, cartCount, cartSubtotal,
     toggleFavoriteProduct, toggleFavoriteStore, isFavoriteProduct, isFavoriteStore,
     placeOrder, updateOrderStatus,

@@ -79,6 +79,27 @@ export async function signUp(
   return { ok: true, needsConfirmation: !data.session };
 }
 
+/**
+ * Starts the Google OAuth flow. Supabase redirects the browser to Google,
+ * then back to this app, where onAuthStateChange picks up the session.
+ */
+export async function signInWithGoogle(
+  redirectTo: string = window.location.origin
+): Promise<AuthResult> {
+  if (!isSupabaseConfigured) return { ok: false, error: 'Supabase is not configured' };
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo,
+      queryParams: { access_type: 'offline', prompt: 'select_account' },
+    },
+  });
+
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
 export async function signOut(): Promise<void> {
   if (!isSupabaseConfigured) return;
   await supabase.auth.signOut();

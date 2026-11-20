@@ -15,8 +15,22 @@ import { toast } from '@/lib/toast';
 
 type Mode = 'signin' | 'signup';
 
+/** Google's mark, drawn inline so there is no extra request. */
+function GoogleMark() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#4285F4" d="M24 9.5c3.5 0 6.6 1.2 9 3.4l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.4 13.1 17.7 9.5 24 9.5z"/>
+      <path fill="#34A853" d="M24 48c6.2 0 11.6-2.4 15.7-6.2l-7.7-6.4c-2.3 1.5-5 2.3-8 2.3-6.3 0-11.6-3.6-13.6-8.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/>
+      <path fill="#FBBC05" d="M2.6 13.2C1 16.4 0 20.1 0 24s1 7.6 2.6 10.8l7.8-6.1c-.5-1.5-.8-3.1-.8-4.7s.3-3.2.8-4.7z"/>
+      <path fill="#EA4335" d="M24 9.5c6.3 0 11.6 3.6 13.6 8.8l7.8-6.1C41.5 5.4 33.4 0 24 0v9.5z" opacity="0"/>
+      <path fill="#EA4335" d="M47.4 24c0-1.6-.1-3.2-.4-4.7l-7.8 6.1c.5 1.5.8 3.1.8 4.7s-.3 3.2-.8 4.7l7.8 6.1c1.6-3.2 2.4-6.9 2.4-10.8 0-2.1-.7-4.2-.04-6.1z" opacity="0"/>
+      <path fill="#EA4335" d="M46.1 15.7 38.3 9.6C40.4 14.6 40.4 20 38.3 25l7.7 6.4c2.4-4.3 2.9-9.6 0-15.7z" opacity="0"/>
+    </svg>
+  );
+}
+
 export default function AuthPage() {
-  const { login, signUp } = useMarketplace();
+  const { login, signUp, loginWithGoogle } = useMarketplace();
   const navigate = useNavigate();
 
   const [mode, setMode] = useState<Mode>('signin');
@@ -32,6 +46,18 @@ export default function AuthPage() {
     setMode(next);
     setError('');
     setConfirmationSent(false);
+  };
+
+  const handleGoogle = async () => {
+    setError('');
+    setBusy(true);
+    try {
+      const result = await loginWithGoogle();
+      if (!result.ok) setError(result.error ?? 'Could not start Google sign-in.');
+      // On success the browser leaves for Google; the session is picked up on return.
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -125,6 +151,26 @@ export default function AuthPage() {
             Open it, then sign in.
           </div>
         ) : (
+          <>
+            <button
+              type="button"
+              onClick={handleGoogle}
+              disabled={busy}
+              className="btn btn-outline btn-lg"
+              style={{ width: '100%', gap: 10 }}
+            >
+              <GoogleMark />
+              Continue with Google
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '22px 0 18px' }}>
+              <span style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', letterSpacing: 'var(--tracking-wide)', textTransform: 'uppercase' }}>
+                or use email
+              </span>
+              <span style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+            </div>
+
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {mode === 'signup' && (
               <>
@@ -206,6 +252,7 @@ export default function AuthPage() {
               {mode === 'signin' ? 'Sign in' : 'Create account'} <ArrowRight size={16} />
             </Button>
           </form>
+          </>
         )}
       </div>
     </PageTransition>
