@@ -14,10 +14,10 @@ import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition, SectionReveal } from '@/components/layout/PageTransition';
 import { ProductCard } from '@/components/commerce/ProductCard';
 import { StoreCard } from '@/components/commerce/StoreCard';
+import { LookbookCard } from '@/components/community/LookbookCard';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useDebounce } from '@/hooks/useDebounce';
 import { formatCompactNumber } from '@/lib/formatters';
-import { PRODUCT_CATEGORIES } from '@/lib/constants';
 import type { ProductCategory } from '@/context/MarketplaceContext';
 
 type SortOption = 'relevance' | 'newest' | 'price-asc' | 'price-desc' | 'rating' | 'popular';
@@ -66,6 +66,16 @@ export default function HomePage() {
   const debouncedQuery = useDebounce(query, 250);
 
   // Filtered + sorted results
+  const filteredStores = useMemo(() => {
+    let stores = debouncedQuery
+      ? searchAll(debouncedQuery).stores
+      : state.stores;
+
+    if (sort === 'rating')  stores = [...stores].sort((a, b) => b.rating - a.rating);
+    if (sort === 'popular') stores = [...stores].sort((a, b) => b.views - a.views);
+
+    return stores;
+  }, [debouncedQuery, state.stores, sort, searchAll]);
 
   const filteredProducts = useMemo(() => {
     let products = debouncedQuery
@@ -88,6 +98,9 @@ export default function HomePage() {
     }
   }, [debouncedQuery, state.products, category, sort, onlyBestSeller, onlyTrending, priceMin, priceMax, searchAll]);
 
+  const filteredLookbooks = useMemo(() => {
+    return [...state.lookbooks].sort((a, b) => b.likes - a.likes);
+  }, [state.lookbooks]);
 
   const heroCovers = useMemo(
     () =>
@@ -98,47 +111,6 @@ export default function HomePage() {
         .filter((src): src is string => Boolean(src))
         .slice(0, 3),
     [state.lookbooks, state.products]
-  );
-
-  const bestSellers = useMemo(
-    () => state.products.filter(p => p.isBestSeller).slice(0, 4),
-    [state.products]
-  );
-
-  const trendingStores = useMemo(
-    () => [...state.stores]
-      .sort((a, b) => (b.views * 0.3 + b.clicks * 0.7) - (a.views * 0.3 + a.clicks * 0.7))
-      .slice(0, 3),
-    [state.stores]
-  );
-
-  const featuredStores = useMemo(
-    () => state.stores.filter(s => s.isFeatured || s.isSponsored).slice(0, 4),
-    [state.stores]
-  );
-
-  const SectionHead = ({ no, label, title, count }: {
-    no: string; label: string; title: string; count?: number;
-  }) => (
-    <div style={{ marginBottom: 28 }}>
-      <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>
-        {no} — {label}
-      </div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-        <h2 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)',
-          fontWeight: 600, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0",
-          color: 'var(--text-primary)',
-        }}>
-          {title}
-        </h2>
-        {count !== undefined && (
-          <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
-            {count}
-          </span>
-        )}
-      </div>
-    </div>
   );
 
   const resetFilters = useCallback(() => {
@@ -171,135 +143,75 @@ export default function HomePage() {
   return (
     <PageTransition>
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section
-        style={{
-          paddingTop:    '96px',
-          paddingBottom: '72px',
-          background:    'var(--bg-primary)',
-          borderBottom:  '1px solid var(--border)',
-        }}
-      >
-        <div className="container">
-          <div className="hero-grid">
+      <section style={{
+        paddingTop: 88, paddingBottom: 72,
+        background: 'var(--bg-primary)',
+        borderBottom: '1px solid var(--border)',
+      }}>
+        <div className="container" style={{ maxWidth: 880, margin: '0 auto', textAlign: 'center' }}>
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            style={{ maxWidth: 640 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.05, duration: 0.4 }}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, color: 'var(--text-secondary)', fontSize: 'var(--text-overline)', fontWeight: 600, letterSpacing: 'var(--tracking-widest)', textTransform: 'uppercase', marginBottom: 28 }}
-            >
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, color: 'var(--text-secondary)', fontSize: 'var(--text-overline)', fontWeight: 600, letterSpacing: 'var(--tracking-widest)', textTransform: 'uppercase', marginBottom: 28 }}>
               <span style={{ width: 24, height: 1, background: 'var(--border-strong)' }} />
               {formatCompactNumber(state.products.length)} piece{state.products.length === 1 ? '' : 's'} · {state.stores.length} boutique{state.stores.length === 1 ? '' : 's'}
-            </motion.div>
+              <span style={{ width: 24, height: 1, background: 'var(--border-strong)' }} />
+            </div>
 
-            {/* Headline */}
-            <h1
-              style={{
-                fontFamily:    'var(--font-serif)',
-                fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1",
-                fontSize:      'clamp(38px, 4.6vw, 60px)',
-                fontWeight:    500,
-                letterSpacing: '-0.015em',
-                lineHeight:    1.08,
-                color:         'var(--text-primary)',
-                marginBottom:  24,
-              }}
-            >
+            <h1 style={{
+              fontFamily: 'var(--font-serif)',
+              fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1",
+              fontSize: 'clamp(40px, 5vw, 64px)',
+              fontWeight: 500,
+              letterSpacing: '-0.015em',
+              lineHeight: 1.06,
+              color: 'var(--text-primary)',
+              marginBottom: 20,
+            }}>
               Where designers meet{' '}
               <span className="text-gradient">tastemakers.</span>
             </h1>
 
-            <p style={{ fontSize: 'var(--text-subtitle)', color: 'var(--text-secondary)', lineHeight: 'var(--leading-relaxed)', maxWidth: 470 }}>
+            <p style={{ fontSize: 'var(--text-subtitle)', color: 'var(--text-secondary)', lineHeight: 'var(--leading-relaxed)', maxWidth: 520, margin: '0 auto 36px' }}>
               Discover South Asia's most curated independent boutiques. Shop limited editions, style your own lookbooks, and join a community that cares about craft.
             </p>
 
-            {/* Hero CTA */}
-            <div style={{ display: 'flex', gap: 12, marginTop: 36, flexWrap: 'wrap' }}>
-              <motion.button
-                onClick={() => setView('products')}
-                className="btn btn-accent btn-lg"
-                whileHover={{ y: -1 }}
-                whileTap={{ y: 0 }}
-                transition={{ duration: 0.15 }}
-              >
-                Explore Products <ArrowRight size={16} />
-              </motion.button>
+            {/* Search centerpiece */}
+            <div style={{ position: 'relative', maxWidth: 560, margin: '0 auto' }}>
+              <Search size={16} color="var(--text-tertiary)" style={{ position: 'absolute', left: 18, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
+              <input
+                id="home-search"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Search boutiques, products, styles…"
+                aria-label="Search"
+                className="input-base"
+                style={{ paddingLeft: 44, paddingRight: query ? 44 : 16, paddingTop: 16, paddingBottom: 16, fontSize: 'var(--text-body)', borderRadius: 'var(--radius-pill)', background: 'var(--bg-card)', boxShadow: 'var(--shadow-elevated)' }}
+              />
+              {query && (
+                <button onClick={() => setQuery('')} aria-label="Clear search" style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex' }}>
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 24, flexWrap: 'wrap' }}>
+              <button onClick={() => setView('products')} className="btn btn-primary btn-lg">
+                Explore products
+              </button>
               <Link to="/lookbooks" className="btn btn-outline btn-lg">
-                Browse Lookbooks
+                Browse lookbooks
               </Link>
             </div>
-
-            {/* Stats row */}
-            <div style={{ display: 'flex', gap: 40, marginTop: 48, borderTop: '1px solid var(--border)', paddingTop: 24 }}>
-              {[
-                { label: 'Boutiques', value: state.stores.length       },
-                { label: 'Products',  value: state.products.length     },
-                { label: 'Lookbooks', value: state.lookbooks.length    },
-              ].map(item => (
-                <div key={item.label}>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
-                    {formatCompactNumber(item.value)}
-                  </div>
-                  <div style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', fontWeight: 500, marginTop: 4 }}>{item.label}</div>
-                </div>
-              ))}
-            </div>
           </motion.div>
-
-          {heroCovers.length > 0 && (
-            <div className="hero-collage" aria-hidden="true">
-              {heroCovers.map((src, i) => (
-                <img
-                  key={src}
-                  src={src}
-                  alt=""
-                  className={`hero-collage-img hero-collage-img--${i}`}
-                />
-              ))}
-            </div>
-          )}
-          {heroCovers.length === 0 && state.stores.length > 0 && (
-            <div className="hero-plate" aria-hidden="true">
-              <span className="hero-plate-mono">{state.stores[0].name.charAt(0)}</span>
-              <div style={{ width: 40, height: 1, background: 'var(--border)' }} />
-              <div className="text-overline" style={{ color: 'var(--text-tertiary)' }}>First boutique</div>
-              <div style={{ fontFamily: 'var(--font-serif)', fontSize: 24, fontWeight: 500, color: 'var(--text-primary)' }}>
-                {state.stores[0].name}
-              </div>
-            </div>
-          )}
-          </div>
         </div>
       </section>
 
       {/* ── Search + View Toggle Bar ─────────────────────────── */}
       <div className={compactBar ? 'browse-toolbar browse-toolbar--compact' : 'browse-toolbar'}>
         <div className="container browse-toolbar__inner">
-          {/* Search input */}
-          <div className="browse-search" style={{ flex: 1, position: 'relative', minWidth: 220 }}>
-            <Search size={15} color="var(--text-tertiary)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} />
-            <input
-              id="home-search"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="Search boutiques, products, styles…"
-              aria-label="Search"
-              className="input-base"
-              style={{ paddingLeft: 36, paddingRight: query ? 36 : 12 }}
-            />
-            {query && (
-              <button onClick={() => setQuery('')} aria-label="Clear search" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', display: 'flex' }}>
-                <X size={14} />
-              </button>
-            )}
-          </div>
-
           <div className="browse-toolbar__controls">
           <button
             type="button"
@@ -309,8 +221,27 @@ export default function HomePage() {
           >
             <Search size={15} />
           </button>
+          {/* View mode pills */}
+          <div className="browse-toolbar__tabs" style={{ display: 'flex', gap: 2, background: 'var(--bg-secondary)', padding: '3px', borderRadius: 'var(--radius-lg)' }}>
+            {VIEW_MODES.map(v => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                aria-pressed={view === v}
+                className={view === v ? 'seg-btn seg-btn--active' : 'seg-btn'}
+                style={{
+                  background: view === v ? 'var(--bg-card)' : 'transparent',
+                  color: view === v ? 'var(--text-primary)' : 'var(--text-tertiary)',
+                  boxShadow: view === v ? 'var(--shadow-card)' : 'none',
+                }}
+              >
+                {v}
+              </button>
+            ))}
+          </div>
+
           {/* Filter button */}
-          {(
+          {view === 'products' && (
             <button
               onClick={() => setShowFilter(v => !v)}
               aria-expanded={showFilter}
@@ -353,7 +284,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {activeChips.length > 0 && (
+        {activeChips.length > 0 && view === 'products' && (
           <div className="container">
             <div className="browse-toolbar__chips">
               {activeChips.map(chip => (
@@ -451,106 +382,109 @@ export default function HomePage() {
       </div>
 
       {/* ── Content area ─────────────────────────────────────── */}
-      <div>
-        {debouncedQuery && (
-          <div className="container" style={{ paddingTop: 40 }}>
-            <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>Search</div>
-            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-title)', fontWeight: 500, fontVariationSettings: "'opsz' 144, 'SOFT' 100, 'WONK' 1", color: 'var(--text-primary)' }}>
-              Results for "{debouncedQuery}"
-            </h2>
-          </div>
-        )}
+      <div className="container" style={{ paddingTop: 40, paddingBottom: 80 }}>
+        {/* Stores view */}
+        <AnimatePresence mode="wait">
+          {view === 'stores' && (
+            <motion.div key="stores" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+              {/* Sponsored */}
+              {filteredStores.some(s => s.isSponsored) && (
+                <SectionReveal>
+                  <div style={{ marginBottom: 48 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+                      <span style={{ fontSize: 'var(--text-overline)', fontWeight: 700, letterSpacing: 'var(--tracking-widest)', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>Sponsored</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
+                      {filteredStores.filter(s => s.isSponsored).map(store => (
+                        <StoreCard key={store.id} store={store} />
+                      ))}
+                    </div>
+                  </div>
+                </SectionReveal>
+              )}
 
-        {!debouncedQuery && trendingStores.length > 0 && (
-          <section style={{ borderBottom: '1px solid var(--border)' }}>
-            <div className="container" style={{ padding: '56px 24px' }}>
-              <SectionHead no="01" label="Trending" title="Trending boutiques" count={trendingStores.length} />
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
-                {trendingStores.map((store, i) => (
-                  <SectionReveal key={store.id} delay={i * 0.05}>
-                    <StoreCard store={store} />
-                  </SectionReveal>
-                ))}
+              {/* All boutiques */}
+              <SectionReveal>
+                <div style={{ marginBottom: 24 }}>
+                  <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>01 — Catalogue</div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                    <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)' }}>
+                      {debouncedQuery ? `Results for "${debouncedQuery}"` : 'All Boutiques'}
+                    </h2>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
+                      {filteredStores.filter(s => !s.isSponsored).length}
+                    </span>
+                  </div>
+                </div>
+                {filteredStores.filter(s => !s.isSponsored).length === 0 ? (
+                  <EmptyState icon="SearchX" title="No boutiques found" description={`No results for "${debouncedQuery}"`} cta="Clear Search" onCtaClick={() => setQuery('')} />
+                ) : (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
+                    {filteredStores.filter(s => !s.isSponsored).map((store, i) => (
+                      <SectionReveal key={store.id} delay={i * 0.04}>
+                        <StoreCard store={store} />
+                      </SectionReveal>
+                    ))}
+                  </div>
+                )}
+              </SectionReveal>
+            </motion.div>
+          )}
+
+          {/* Products view */}
+          {view === 'products' && (
+            <motion.div key="products" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+              <div style={{ marginBottom: 28 }}>
+                <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>02 — Pieces</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)' }}>
+                    {debouncedQuery ? `"${debouncedQuery}"` : 'All Products'}
+                  </h2>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
+                    {filteredProducts.length}
+                  </span>
+                </div>
               </div>
-            </div>
-          </section>
-        )}
+              {filteredProducts.length === 0 ? (
+                <EmptyState icon="SearchX" title="No products found" description="Try adjusting your filters or search query." cta="Reset Filters" onCtaClick={resetFilters} />
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 24 }}>
+                  {filteredProducts.map((p, i) => (
+                    <SectionReveal key={p.id} delay={(i % 12) * 0.03}>
+                      <ProductCard product={p} eager={i < 8} />
+                    </SectionReveal>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
 
-        {!debouncedQuery && featuredStores.length > 0 && (
-          <section style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)' }}>
-            <div className="container" style={{ padding: '56px 24px' }}>
-              <SectionHead no="02" label="Spotlight" title="Featured boutiques" count={featuredStores.length} />
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
-                {featuredStores.map((store, i) => (
-                  <SectionReveal key={store.id} delay={i * 0.05}>
-                    <StoreCard store={store} />
-                  </SectionReveal>
-                ))}
+          {/* Lookbooks view */}
+          {view === 'lookbooks' && (
+            <motion.div key="lookbooks" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+              <div style={{ marginBottom: 28 }}>
+                <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>03 — Lookbooks</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72, 'SOFT' 50, 'WONK' 0", color: 'var(--text-primary)' }}>Community Lookbooks</h2>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
+                    {filteredLookbooks.length}
+                  </span>
+                </div>
               </div>
-            </div>
-          </section>
-        )}
-
-        {!debouncedQuery && bestSellers.length > 0 && (
-          <section style={{ borderBottom: '1px solid var(--border)' }}>
-            <div className="container" style={{ padding: '56px 24px' }}>
-              <SectionHead no="03" label="Most wanted" title="Best sellers" count={bestSellers.length} />
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: 24 }}>
-                {bestSellers.map((p, i) => (
-                  <SectionReveal key={p.id} delay={(i % 8) * 0.04}>
-                    <ProductCard product={p} eager={i < 4} />
-                  </SectionReveal>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        <section>
-          <div className="container" style={{ padding: '56px 24px 80px' }}>
-            <SectionHead
-              no="04"
-              label={debouncedQuery ? 'Search' : 'Catalogue'}
-              title={debouncedQuery ? `Results for "${debouncedQuery}"` : 'The full catalogue'}
-              count={filteredProducts.length}
-            />
-
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 32 }}>
-              {(['All', ...PRODUCT_CATEGORIES] as const).map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setCategory(cat)}
-                  aria-pressed={category === cat}
-                  className={category === cat ? 'btn btn-primary btn-sm' : 'btn btn-outline btn-sm'}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {filteredProducts.length === 0 ? (
-              <EmptyState
-                icon="SearchX"
-                title="Nothing here yet"
-                description={debouncedQuery || category !== 'All'
-                  ? 'No pieces match. Clear the search or pick another category.'
-                  : 'Sellers are stocking their shelves. Check back soon.'}
-                cta={debouncedQuery || category !== 'All' ? 'Clear filters' : 'Browse boutiques'}
-                {...((debouncedQuery || category !== 'All')
-                  ? { onCtaClick: () => { setQuery(''); setCategory('All'); } }
-                  : {})}
-              />
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: 24 }}>
-                {filteredProducts.map((p, i) => (
-                  <SectionReveal key={p.id} delay={(i % 12) * 0.03}>
-                    <ProductCard product={p} eager={i < 8} />
-                  </SectionReveal>
-                ))}
-              </div>
-            )}
-          </div>
-        </section>
+              {filteredLookbooks.length === 0 ? (
+                <EmptyState icon="Layers" title="No lookbooks yet" description="Be the first to create one in the Style Studio!" cta="Open Studio" ctaLink="/studio" />
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', gap: 24 }}>
+                  {filteredLookbooks.map((lb, i) => (
+                    <SectionReveal key={lb.id} delay={i * 0.04}>
+                      <LookbookCard lookbook={lb} rank={i + 1} />
+                    </SectionReveal>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </PageTransition>
   );
