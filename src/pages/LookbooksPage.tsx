@@ -97,60 +97,55 @@ export default function LookbooksPage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section
         style={{
-          paddingTop:    100,
+          paddingTop:    96,
           paddingBottom: 72,
-          textAlign:     'center',
           background:    'var(--bg-primary)',
-          position:      'relative',
-          overflow:      'hidden',
           borderBottom:  '1px solid var(--border)',
         }}
       >
-        {/* Background orbs */}
-        <div style={{ position: 'absolute', top: '10%', left: '5%', width: '30vw', height: '30vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(122,193,131,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '10%', right: '5%', width: '25vw', height: '25vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(210,168,101,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--accent-light)', color: 'var(--accent)', padding: '6px 14px', borderRadius: 'var(--radius-pill)', fontSize: 'var(--text-overline)', fontWeight: 700, letterSpacing: 'var(--tracking-widest)', textTransform: 'uppercase', marginBottom: 24 }}>
-              <Trophy size={12} /> Community Lookbooks
+        <div className="container">
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, color: 'var(--text-secondary)', fontSize: 'var(--text-overline)', fontWeight: 600, letterSpacing: 'var(--tracking-widest)', textTransform: 'uppercase', marginBottom: 28 }}>
+              <span style={{ width: 24, height: 1, background: 'var(--border-strong)' }} />
+              Community lookbooks
             </div>
             <h1
               style={{
                 fontFamily:    'var(--font-serif)',
-                fontSize:      'clamp(40px, 8vw, 76px)',
-                fontWeight:    800,
+                fontVariationSettings: "'opsz' 144",
+                fontSize:      'clamp(38px, 4.6vw, 60px)',
+                fontWeight:    500,
                 color:         'var(--text-primary)',
-                lineHeight:    'var(--leading-tight)',
-                letterSpacing: '-0.03em',
+                lineHeight:    1.08,
+                letterSpacing: '-0.015em',
+                maxWidth:      640,
               }}
             >
-              Style, curated
-              <br />
+              Style, curated{' '}
               <span className="text-gradient">by the community.</span>
             </h1>
-            <p style={{ fontSize: 'var(--text-subtitle)', color: 'var(--text-secondary)', marginTop: 20, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto', lineHeight: 'var(--leading-relaxed)' }}>
+            <p style={{ fontSize: 'var(--text-subtitle)', color: 'var(--text-secondary)', marginTop: 24, maxWidth: 470, lineHeight: 'var(--leading-relaxed)' }}>
               Every lookbook is a story. Browse editorial collections crafted by our tastemakers — or build your own in the Studio.
             </p>
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 32 }}>
+            <div style={{ display: 'flex', gap: 12, marginTop: 32 }}>
               <Link to="/studio" className="btn btn-accent btn-lg">
-                <Sparkles size={15} /> Create a Lookbook
+                Create a Lookbook
               </Link>
               <a href="#lookbooks" className="btn btn-outline btn-lg">Browse All</a>
             </div>
 
             {/* Stats */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 48, marginTop: 48 }}>
+            <div style={{ display: 'flex', gap: 40, marginTop: 48, borderTop: '1px solid var(--border)', paddingTop: 24 }}>
               {[
                 { label: 'Lookbooks',  value: state.lookbooks.length },
                 { label: 'Stylists',   value: rankings.length        },
                 { label: 'Total Likes', value: state.lookbooks.reduce((s, lb) => s + lb.likes, 0) },
               ].map(item => (
-                <div key={item.label} style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                <div key={item.label}>
+                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                     {formatCompactNumber(item.value)}
                   </div>
-                  <div style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', fontWeight: 500, marginTop: 2 }}>{item.label}</div>
+                  <div style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', fontWeight: 500, marginTop: 4 }}>{item.label}</div>
                 </div>
               ))}
             </div>

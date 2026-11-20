@@ -72,33 +72,17 @@ export function EmptyState({
   return (
     <motion.div
       className="empty-state"
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       style={{ padding: compact ? '40px 24px' : undefined }}
     >
-      {/* Animated icon container */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1,   opacity: 1 }}
-        transition={{ delay: 0.1, duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-        style={{
-          width:        80,
-          height:       80,
-          borderRadius: '50%',
-          background:   'var(--bg-tertiary)',
-          display:      'flex',
-          alignItems:   'center',
-          justifyContent: 'center',
-          marginBottom: 8,
-        }}
-      >
-        <IconComponent
-          size={compact ? 28 : 36}
-          color="var(--text-tertiary)"
-          strokeWidth={1.25}
-        />
-      </motion.div>
+      <IconComponent
+        size={compact ? 24 : 30}
+        color="var(--text-tertiary)"
+        strokeWidth={1.25}
+        style={{ marginBottom: 18 }}
+      />
 
       <h3 className="empty-state-title">{title}</h3>
 
@@ -111,21 +95,21 @@ export function EmptyState({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.25 }}
+          transition={{ delay: 0.15 }}
         >
           {ctaLink ? (
             <Link
               to={ctaLink}
-              className="btn btn-accent btn-pill"
-              style={{ marginTop: 8 }}
+              className="btn btn-accent"
+              style={{ marginTop: 20 }}
             >
               {cta}
             </Link>
           ) : (
             <button
               onClick={onCtaClick}
-              className="btn btn-accent btn-pill"
-              style={{ marginTop: 8 }}
+              className="btn btn-accent"
+              style={{ marginTop: 20 }}
             >
               {cta}
             </button>

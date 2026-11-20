@@ -65,17 +65,24 @@ export function ProductCard({ product, className, eager = false }: ProductCardPr
     >
       <Link to={`/product/${product.id}`} style={{ display: 'block' }}>
         {/* Image container */}
-        <div className="aspect-product" style={{ position: 'relative', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
+        <div className="aspect-product" style={{ position: 'relative', overflow: 'hidden', background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Monogram fallback when no image exists */}
+          {!product.images[0] && (
+            <span style={{ fontFamily: 'var(--font-serif)', fontSize: 44, fontWeight: 500, color: 'var(--text-tertiary)' }}>
+              {product.name.charAt(0)}
+            </span>
+          )}
           {/* Skeleton */}
-          {!imageLoaded && (
+          {product.images[0] && !imageLoaded && (
             <div style={{ position: 'absolute', inset: 0 }}>
               <Skeleton className="w-full h-full" style={{ borderRadius: 0 }} />
             </div>
           )}
 
           {/* Product image with zoom on card hover */}
+          {product.images[0] && (
           <motion.img
-            src={optimizeImageUrl(product.images[0] ?? '', 600, 800)}
+            src={optimizeImageUrl(product.images[0], 600, 800)}
             alt={`${product.name} — ${product.category} from ${store?.name ?? 'Clothza'}`}
             loading={eager ? 'eager' : 'lazy'}
             decoding="async"
@@ -91,6 +98,7 @@ export function ProductCard({ product, className, eager = false }: ProductCardPr
               display:    'block',
             }}
           />
+          )}
 
           {/* Out of stock overlay */}
           {isOutOfStock && (

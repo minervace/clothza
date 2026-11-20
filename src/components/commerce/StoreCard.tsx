@@ -41,26 +41,40 @@ export function StoreCard({ store, className }: StoreCardProps) {
       style={{ cursor: 'pointer', position: 'relative' }}
     >
       <Link to={`/store/${store.slug}`} style={{ display: 'block' }}>
-        {/* Banner */}
+        {/* Banner — initial monogram when no image exists */}
         <div className="aspect-banner img-zoom-container" style={{ position: 'relative' }}>
-          {!bannerLoaded && <Skeleton className="w-full h-full" style={{ borderRadius: 0 }} />}
-          <img
-            src={optimizeImageUrl(store.banner, 600, 200)}
-            alt={`${store.name} banner`}
-            loading="lazy"
-            decoding="async"
-            onLoad={() => setBannerLoaded(true)}
-            className="img-zoom"
-            style={{
-              width:      '100%',
-              height:     '100%',
-              objectFit:  'cover',
-              opacity:    bannerLoaded ? 1 : 0,
-              transition: 'opacity 400ms ease',
-              position:   'absolute',
-              inset:      0,
-            }}
-          />
+          {store.banner ? (
+            <>
+              {!bannerLoaded && <Skeleton className="w-full h-full" style={{ borderRadius: 0 }} />}
+              <img
+                src={optimizeImageUrl(store.banner, 600, 200)}
+                alt={`${store.name} banner`}
+                loading="lazy"
+                decoding="async"
+                onLoad={() => setBannerLoaded(true)}
+                className="img-zoom"
+                style={{
+                  width:      '100%',
+                  height:     '100%',
+                  objectFit:  'cover',
+                  opacity:    bannerLoaded ? 1 : 0,
+                  transition: 'opacity 400ms ease',
+                  position:   'absolute',
+                  inset:      0,
+                }}
+              />
+            </>
+          ) : (
+            <div style={{
+              width: '100%', height: '100%',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              background: 'var(--bg-tertiary)',
+            }}>
+              <span style={{ fontFamily: 'var(--font-serif)', fontSize: 40, fontWeight: 500, color: 'var(--text-tertiary)' }}>
+                {store.name.charAt(0)}
+              </span>
+            </div>
+          )}
 
           {/* Sponsored badge */}
           {store.isSponsored && (
@@ -88,23 +102,31 @@ export function StoreCard({ store, className }: StoreCardProps) {
         <div style={{ padding: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: 10 }}>
           {/* Logo + name row */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div className="aspect-logo" style={{ width: 52, height: 52, borderRadius: 'var(--radius-md)', flexShrink: 0, border: '1px solid var(--border)' }}>
-              {!logoLoaded && <Skeleton className="w-full h-full" />}
-              <img
-                src={optimizeImageUrl(store.logo, 100, 100)}
-                alt={`${store.name} logo`}
-                loading="lazy"
-                decoding="async"
-                onLoad={() => setLogoLoaded(true)}
-                style={{
-                  width:     '100%',
-                  height:    '100%',
-                  objectFit: 'cover',
-                  opacity:   logoLoaded ? 1 : 0,
-                  transition: 'opacity 300ms ease',
-                  display:   'block',
-                }}
-              />
+            <div className="aspect-logo" style={{ width: 52, height: 52, borderRadius: 'var(--radius-sm)', flexShrink: 0, border: '1px solid var(--border)', background: 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {store.logo ? (
+                <>
+                  {!logoLoaded && <Skeleton className="w-full h-full" />}
+                  <img
+                    src={optimizeImageUrl(store.logo, 100, 100)}
+                    alt={`${store.name} logo`}
+                    loading="lazy"
+                    decoding="async"
+                    onLoad={() => setLogoLoaded(true)}
+                    style={{
+                      width:     '100%',
+                      height:    '100%',
+                      objectFit: 'cover',
+                      opacity:   logoLoaded ? 1 : 0,
+                      transition: 'opacity 300ms ease',
+                      display:   'block',
+                    }}
+                  />
+                </>
+              ) : (
+                <span style={{ fontFamily: 'var(--font-serif)', fontSize: 22, color: 'var(--text-tertiary)' }}>
+                  {store.name.charAt(0)}
+                </span>
+              )}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontFamily: 'var(--font-serif)', fontWeight: 600, fontSize: 'var(--text-subtitle)', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
