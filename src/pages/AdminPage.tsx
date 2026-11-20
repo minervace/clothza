@@ -22,14 +22,16 @@ import { toast } from '@/lib/toast';
 import { formatPrice, formatDate, formatCountdown } from '@/lib/formatters';
 import { verifyAdminPassword } from '@/lib/crypto';
 import { haptic } from '@/lib/haptics';
+import { SubscriptionReview } from '@/components/admin/SubscriptionReview';
 
-type AdminTab = 'stats' | 'users' | 'stores' | 'orders';
+type AdminTab = 'stats' | 'users' | 'stores' | 'orders' | 'subscriptions';
 
 const TABS: Array<{ id: AdminTab; label: string; icon: typeof Users }> = [
   { id: 'stats',  label: 'Platform Stats', icon: BarChart2   },
   { id: 'users',  label: 'Users',          icon: Users       },
   { id: 'stores', label: 'Stores',         icon: Store       },
   { id: 'orders', label: 'All Orders',     icon: CheckCircle2 },
+  { id: 'subscriptions', label: 'Seller Subscriptions', icon: Crown },
 ];
 
 export default function AdminPage() {
@@ -339,6 +341,7 @@ export default function AdminPage() {
               )}
             </div>
           )}
+          {activeTab === 'subscriptions' && <SubscriptionReview />}
         </main>
       </div>
 

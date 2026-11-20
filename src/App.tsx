@@ -30,6 +30,7 @@ const OrdersPage     = lazy(() => import('@/pages/OrdersPage'));
 const NotFoundPage   = lazy(() => import('@/pages/NotFoundPage'));
 const FavoritesPage  = lazy(() => import('@/pages/FavoritesPage'));
 const AuthPage       = lazy(() => import('@/pages/AuthPage'));
+const SellPage       = lazy(() => import('@/pages/SellPage'));
 
 // ── Page loading skeleton ────────────────────────────────────
 
@@ -73,6 +74,7 @@ function AnimatedRoutes({
           <Route path="/orders"        element={<Suspense fallback={<PageLoader />}><OrdersPage /></Suspense>} />
           <Route path="/favorites"      element={<Suspense fallback={<PageLoader />}><FavoritesPage /></Suspense>} />
           <Route path="/signin"         element={<Suspense fallback={<PageLoader />}><AuthPage /></Suspense>} />
+          <Route path="/sell"           element={<Suspense fallback={<PageLoader />}><SellPage /></Suspense>} />
           <Route path="*"              element={<Suspense fallback={<PageLoader />}><NotFoundPage /></Suspense>} />
         </Routes>
       </AnimatePresence>

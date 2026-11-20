@@ -7,7 +7,6 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, X, SlidersHorizontal,
-  ArrowRight,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useMarketplace } from '@/hooks/useMarketplace';
@@ -101,17 +100,6 @@ export default function HomePage() {
   const filteredLookbooks = useMemo(() => {
     return [...state.lookbooks].sort((a, b) => b.likes - a.likes);
   }, [state.lookbooks]);
-
-  const heroCovers = useMemo(
-    () =>
-      [
-        ...state.lookbooks.map(lb => lb.coverImage),
-        ...state.products.map(p => p.images[0]),
-      ]
-        .filter((src): src is string => Boolean(src))
-        .slice(0, 3),
-    [state.lookbooks, state.products]
-  );
 
   const resetFilters = useCallback(() => {
     setCategory('All');

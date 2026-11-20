@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clothza — system map</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,40..100,0..1;1,9..144,300..900,40..100,0..1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --paper:#FAF7F0; --card:#FDFBF6; --well:#EAE5D7;
+    --ink:#191612; --graphite:#57503F; --faded:#8C8574;
+    --rule:#E0DAC9; --rust:#94471B; --green:#3D6B35;
+  }
+  body{background:var(--paper);color:var(--ink);font-family:'Outfit',sans-serif;padding:56px 24px 96px;line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--graphite);font-weight:600;display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .eyebrow:before{content:'';width:28px;height:1px;background:var(--ink)}
+  h1{font-family:'Fraunces',serif;font-variation-settings:'opsz' 144,'SOFT' 100,'WONK' 1;font-size:clamp(34px,4.4vw,52px);font-weight:500;line-height:1.05;letter-spacing:-.015em;margin-bottom:16px}
+  h1 em{font-style:italic;color:var(--rust)}
+  .lede{max-width:560px;color:var(--graphite);font-size:16px;margin-bottom:56px}
+  h2{font-family:'Fraunces',serif;font-variation-settings:'opsz' 72,'SOFT' 50;font-size:24px;font-weight:600;margin-bottom:6px}
+  .no{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faded);margin-bottom:8px;font-weight:600}
+  section.part{border-top:1px solid var(--ink);padding-top:28px;margin-top:64px}
+  section.part > .no{margin-bottom:10px}
+  /* stack diagram */
+  .stack{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin-top:24px}
+  .layer{background:var(--card);padding:20px 24px;display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:baseline}
+  .layer b{font-family:'Fraunces',serif;font-size:17px;font-weight:600}
+  .layer p{color:var(--graphite);font-size:14.5px}
+  .layer p code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:var(--well);padding:1px 5px;border-radius:3px}
+  /* flow */
+  .flow{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;align-items:stretch}
+  .step{flex:1 1 190px;background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:16px 18px}
+  .step .k{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);font-weight:600;margin-bottom:6px}
+  .step .t{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:4px}
+  .step .d{font-size:13px;color:var(--graphite)}
+  .arrow{align-self:center;color:var(--faded);font-size:18px}
+  /* roles matrix */
+  table{width:100%;border-collapse:collapse;margin-top:24px;font-size:14px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faded);font-weight:600;border-bottom:1px solid var(--ink)}
+  td:first-child{font-family:'Fraunces',serif;font-size:15px}
+  .yes{color:var(--green);font-weight:600}
+  .no{color:var(--faded)}
+  /* tables grid */
+  .tables{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin-top:24px}
+  .tbl{background:var(--card);padding:14px 16px}
+  .tbl b{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;font-weight:600;display:block;margin-bottom:3px}
+  .tbl span{font-size:12.5px;color:var(--faded)}
+  /* status */
+  .status{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin-top:24px}
+  @media(max-width:640px){.status{grid-template-columns:1fr}.layer{grid-template-columns:1fr;gap:6px}}
+  .grp{background:var(--card);padding:20px 22px}
+  .grp h3{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:12px}
+  .grp ul{list-style:none}
+  .grp li{font-size:13.5px;color:var(--graphite);padding:5px 0 5px 20px;position:relative}
+  .grp li:before{position:absolute;left:0;top:5px;font-size:12px}
+  .grp.live li:before{content:'✓';color:var(--green)}
+  .grp.gap li:before{content:'·';color:var(--faded)}
+  .foot{margin-top:64px;border-top:1px solid var(--ink);padding-top:16px;display:flex;justify-content:space-between;font-size:12px;color:var(--faded);gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">System map</div>
+  <h1>How Clothza works,<br><em>end to end.</em></h1>
+  <p class="lede">Three layers, one database, zero servers of our own. This is the whole machine — what runs where, who may touch what, and which pieces are already real.</p>
+
+  <!-- 1. THE STACK -->
+  <section class="part">
+    <div class="no">01 — The stack</div>
+    <h2>Where the code runs</h2>
+    <div class="stack">
+      <div class="layer">
+        <b>Browser</b>
+        <p>React SPA. Holds the catalogue in memory, keeps the cart and theme in <code>localStorage</code>, and talks straight to Supabase over HTTPS. No server of ours in between.</p>
+      </div>
+      <div class="layer">
+        <b>Cloudflare Worker</b>
+        <p>Serves <code>./dist</code> at <b>clothza.tech</b>. Any unknown path returns <code>index.html</code> at 200 so React Router handles deep links like <code>/lookbooks</code>.</p>
+      </div>
+      <div class="layer">
+        <b>Supabase</b>
+        <p>Postgres (11 tables), Auth (email + password), Storage (<code>clothza-media</code>). 35 row-level policies decide every read and write.</p>
+      </div>
+      <div class="layer">
+        <b>Android APK</b>
+        <p>The same <code>dist</code> wrapped by Capacitor. Signed release build, minSdk 24, package <code>com.clothza.app</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. FIRST LOAD -->
+  <section class="part">
+    <div class="no">02 — A visitor arrives</div>
+    <h2>The first five seconds</h2>
+    <div class="flow">
+      <div class="step"><div class="k">01</div><div class="t">Request</div><div class="d">Worker returns the shell and hashed assets from the CDN edge.</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">02</div><div class="t">Paint</div><div class="d">Inline script applies the saved theme before first paint — no flash.</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">03</div><div class="t">Hydrate</div><div class="d">Provider fetches stores, products, lookbooks; restores the session.</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">04</div><div class="t">Render</div><div class="d">Route guards wait for <code>authReady</code>, then pages draw from memory.</div></div>
+    </div>
+    <p style="margin-top:20px;font-size:13.5px;color:var(--graphite)">If Supabase is unreachable the app falls back to demo seed data instead of breaking.</p>
+  </section>
+
+  <!-- 3. THE LOOP -->
+  <section class="part">
+    <div class="no">03 — The retail loop</div>
+    <h2>From a seller's shelf to a paid order</h2>
+    <div class="flow">
+      <div class="step"><div class="k">Seller</div><div class="t">Opens a boutique</div><div class="d">Signs up as Sell → names the store, sets socials, uploads logo and banner.</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">Seller</div><div class="t">Lists a piece</div><div class="d">Price, category, sizes × colours × stock, photos to Storage.</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">Customer</div><div class="t">Adds to cart</div><div class="d">Cart lives locally, survives refresh. Size and colour are validated against stock.</div></div>
+    </div>
+    <div class="flow" style="margin-top:10px">
+      <div class="step"><div class="k">Customer</div><div class="t">Checkout</div><div class="d">Address, coupon, payment method. Order row written to Postgres.</div></div>
+      <div class="arrow">→</div>
+      <div class="step" style="border-style:dashed"><div class="k">Gateway</div><div class="t">Pays</div><div class="d">eSewa / Khalti / FonePay hosted page. <b>Not built</b> — needs merchant accounts.</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="k">Seller</div><div class="t">Fulfils</div><div class="d">Marks shipped; customer tracks it under /orders.</div></div>
+    </div>
+  </section>
+
+  <!-- 4. WHO MAY DO WHAT -->
+  <section class="part">
+    <div class="no">04 — Access</div>
+    <h2>Three roles, enforced twice</h2>
+    <table>
+      <thead><tr><th>Capability</th><th>Customer</th><th>Shop owner</th><th>Admin</th></tr></thead>
+      <tbody>
+        <tr><td>Browse, cart, favourites, checkout</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Create and edit own store</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>List and stock own products</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>See own orders and messages</td><td class="no">—</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>See every store, user and order</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+        <tr><td>Change anyone's role</td><td class="no">—</td><td class="no">—</td><td class="yes">✓</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:20px;font-size:13.5px;color:var(--graphite)">Enforced in the UI (route guards), and again in Postgres (RLS + a trigger that rejects role changes unless the caller is already admin). The second layer is the one that matters: a customer cannot promote themselves by calling the API directly.</p>
+  </section>
+
+  <!-- 5. DATA -->
+  <section class="part">
+    <div class="no">05 — The database</div>
+    <h2>Eleven tables</h2>
+    <div class="tables">
+      <div class="tbl"><b>profiles</b><span>one per account, holds the role</span></div>
+      <div class="tbl"><b>stores</b><span>owner_id → shop owner</span></div>
+      <div class="tbl"><b>products</b><span>variants as JSONB, images as array</span></div>
+      <div class="tbl"><b>orders</b><span>buyer + store, items, payment</span></div>
+      <div class="tbl"><b>reviews</b><span>one per product per user</span></div>
+      <div class="tbl"><b>lookbooks</b><span>community styling</span></div>
+      <div class="tbl"><b>lookbook_likes</b><span>join table</span></div>
+      <div class="tbl"><b>messages</b><span>customer ↔ boutique</span></div>
+      <div class="tbl"><b>coupons</b><span>per store, capped uses</span></div>
+      <div class="tbl"><b>favorite_products</b><span>join table</span></div>
+      <div class="tbl"><b>favorite_stores</b><span>join table</span></div>
+    </div>
+  </section>
+
+  <!-- 6. STATUS -->
+  <section class="part">
+    <div class="no">06 — Status</div>
+    <h2>What is real today</h2>
+    <div class="status">
+      <div class="grp live">
+        <h3>Working</h3>
+        <ul>
+          <li>Accounts, roles, sessions, route guards</li>
+          <li>Store create &amp; edit, image uploads</li>
+          <li>Product add / edit / delete</li>
+          <li>Favourites, reviews, orders → Postgres</li>
+          <li>Domain, TLS, deep links, dark mode</li>
+          <li>Android APK, signed</li>
+        </ul>
+      </div>
+      <div class="grp gap">
+        <h3>Not yet</h3>
+        <ul>
+          <li>Messages and coupons — memory only, vanish on refresh</li>
+          <li>Seller Orders tab reads memory, not the table</li>
+          <li>No variant stock grid (size × colour × stock)</li>
+          <li>Payments: UI only, no gateway or webhook</li>
+          <li>No realtime updates between devices</li>
+          <li>Email delivery needs custom SMTP</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>Clothza — system map</span>
+    <span>clothza.tech · Kathmandu</span>
+  </div>
+</div>
+</body>
+</html>

@@ -16,9 +16,9 @@ const FOOTER_LINKS = {
     { label: 'Best Sellers',     to: '/'          },
   ],
   Sell: [
-    { label: 'Start Selling',    to: '/dashboard' },
+    { label: 'Start Selling',    to: '/sell'      },
     { label: 'Seller Dashboard', to: '/dashboard' },
-    { label: 'Subscription Plans', to: '/'        },
+    { label: 'Subscription Plans', to: '/sell'    },
     { label: 'Analytics',        to: '/dashboard' },
   ],
   Company: [
