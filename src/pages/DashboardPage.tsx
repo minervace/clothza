@@ -309,9 +309,9 @@ function ProductModal({ isOpen, onClose, storeId, editProduct }: ProductModalPro
         <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 20, flexWrap: 'wrap' }}>
           {(
             [
-              { key: 'isBestSeller', label: '🏆 Best Seller' },
-              { key: 'isTrending',   label: '🔥 Trending'    },
-              { key: 'isSponsored',  label: '⭐ Sponsored'   },
+              { key: 'isBestSeller', label: 'Best Seller' },
+              { key: 'isTrending',   label: 'Trending'    },
+              { key: 'isSponsored',  label: 'Sponsored'   },
             ] as const
           ).map(({ key, label }) => (
             <label key={key} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', userSelect: 'none', fontSize: 'var(--text-body)', color: 'var(--text-secondary)', fontWeight: 500 }}>
@@ -788,7 +788,7 @@ export default function DashboardPage() {
                             <td style={{ padding: '12px 14px', fontSize: 'var(--text-caption)', color: 'var(--text-secondary)' }}>{p.category}</td>
                             <td style={{ padding: '12px 14px', fontWeight: 700, fontSize: 'var(--text-body)', color: 'var(--text-primary)' }}>{formatPrice(p.price)}</td>
                             <td style={{ padding: '12px 14px', fontSize: 'var(--text-caption)', color: totalStock <= 5 ? 'var(--danger)' : 'var(--success)', fontWeight: 600 }}>{totalStock}</td>
-                            <td style={{ padding: '12px 14px', fontSize: 'var(--text-caption)', color: 'var(--text-secondary)', fontWeight: 600 }}>⭐ {formatRating(p.rating)}</td>
+                            <td style={{ padding: '12px 14px', fontSize: 'var(--text-caption)', color: 'var(--text-secondary)', fontWeight: 600 }}>{formatRating(p.rating)}</td>
                             <td style={{ padding: '12px 14px' }}>
                               <div style={{ display: 'flex', gap: 6 }}>
                                 <button

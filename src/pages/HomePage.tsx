@@ -236,6 +236,16 @@ export default function HomePage() {
               ))}
             </div>
           )}
+          {heroCovers.length === 0 && state.stores.length > 0 && (
+            <div className="hero-plate" aria-hidden="true">
+              <span className="hero-plate-mono">{state.stores[0].name.charAt(0)}</span>
+              <div style={{ width: 40, height: 1, background: 'var(--border)' }} />
+              <div className="text-overline" style={{ color: 'var(--text-tertiary)' }}>First boutique</div>
+              <div style={{ fontFamily: 'var(--font-serif)', fontSize: 24, fontWeight: 500, color: 'var(--text-primary)' }}>
+                {state.stores[0].name}
+              </div>
+            </div>
+          )}
           </div>
         </div>
       </section>
@@ -399,8 +409,8 @@ export default function HomePage() {
                 {/* Toggles */}
                 <div style={{ display: 'flex', gap: 10 }}>
                   {[
-                    { label: '🏆 Best Sellers', state: onlyBestSeller, setter: setOnlyBestSeller },
-                    { label: '🔥 Trending',     state: onlyTrending,   setter: setOnlyTrending   },
+                    { label: 'Best sellers', state: onlyBestSeller, setter: setOnlyBestSeller },
+                    { label: 'Trending',      state: onlyTrending,   setter: setOnlyTrending   },
                   ].map(toggle => (
                     <button
                       key={toggle.label}
@@ -455,13 +465,16 @@ export default function HomePage() {
 
               {/* All boutiques */}
               <SectionReveal>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 700, color: 'var(--text-primary)' }}>
-                    {debouncedQuery ? `Results for "${debouncedQuery}"` : 'All Boutiques'}
-                  </h2>
-                  <span style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', background: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: 'var(--radius-pill)' }}>
-                    {filteredStores.filter(s => !s.isSponsored).length}
-                  </span>
+                <div style={{ marginBottom: 24 }}>
+                  <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>01 — Catalogue</div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                    <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)' }}>
+                      {debouncedQuery ? `Results for "${debouncedQuery}"` : 'All Boutiques'}
+                    </h2>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
+                      {filteredStores.filter(s => !s.isSponsored).length}
+                    </span>
+                  </div>
                 </div>
                 {filteredStores.filter(s => !s.isSponsored).length === 0 ? (
                   <EmptyState icon="SearchX" title="No boutiques found" description={`No results for "${debouncedQuery}"`} cta="Clear Search" onCtaClick={() => setQuery('')} />
@@ -481,13 +494,16 @@ export default function HomePage() {
           {/* Products view */}
           {view === 'products' && (
             <motion.div key="products" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
-                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 700, color: 'var(--text-primary)' }}>
-                  {debouncedQuery ? `"${debouncedQuery}"` : 'All Products'}
-                </h2>
-                <span style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', background: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: 'var(--radius-pill)' }}>
-                  {filteredProducts.length}
-                </span>
+              <div style={{ marginBottom: 28 }}>
+                <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>02 — Pieces</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)' }}>
+                    {debouncedQuery ? `"${debouncedQuery}"` : 'All Products'}
+                  </h2>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
+                    {filteredProducts.length}
+                  </span>
+                </div>
               </div>
               {filteredProducts.length === 0 ? (
                 <EmptyState icon="SearchX" title="No products found" description="Try adjusting your filters or search query." cta="Reset Filters" onCtaClick={resetFilters} />
@@ -506,11 +522,14 @@ export default function HomePage() {
           {/* Lookbooks view */}
           {view === 'lookbooks' && (
             <motion.div key="lookbooks" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 28 }}>
-                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 700, color: 'var(--text-primary)' }}>Community Lookbooks</h2>
-                <span style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', background: 'var(--bg-secondary)', padding: '2px 8px', borderRadius: 'var(--radius-pill)' }}>
-                  {filteredLookbooks.length}
-                </span>
+              <div style={{ marginBottom: 28 }}>
+                <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>03 — Lookbooks</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)' }}>Community Lookbooks</h2>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
+                    {filteredLookbooks.length}
+                  </span>
+                </div>
               </div>
               {filteredLookbooks.length === 0 ? (
                 <EmptyState icon="Layers" title="No lookbooks yet" description="Be the first to create one in the Style Studio!" cta="Open Studio" ctaLink="/studio" />

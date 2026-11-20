@@ -150,7 +150,7 @@ export function Footer() {
           {/* Copyright */}
           <p style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)' }}>
             © {new Date().getFullYear()} Clothza. All rights reserved.
-            {' '}Built with ❤️ in Kathmandu.
+            {' '}Made in Kathmandu.
           </p>
         </div>
       </div>

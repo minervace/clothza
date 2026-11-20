@@ -93,7 +93,7 @@ export function LookbookCard({ lookbook, rank, className }: LookbookCardProps) {
               animate={{ rotate: [0, -5, 5, 0] }}
               transition={{ delay: 0.5 + (rank * 0.1), duration: 0.4 }}
             >
-              {rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉'}
+              {rank === 1 ? 'I' : rank === 2 ? 'II' : 'III'}
             </motion.div>
           )}
 

@@ -68,9 +68,9 @@ export function Badge({ variant = 'default', children, dot, className }: BadgePr
 
 const TIER_EMOJI: Record<SubscriptionTier, string> = {
   free:   '',
-  bronze: '🥉',
-  silver: '🥈',
-  gold:   '🥇',
+  bronze: '',
+  silver: '',
+  gold:   '',
 };
 
 interface TierBadgeProps {
@@ -138,11 +138,10 @@ interface RankBadgeProps {
 export function RankBadge({ rank, className }: RankBadgeProps) {
   const variant: BadgeVariant =
     rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'default';
-  const emoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
 
   return (
     <Badge variant={variant} className={className}>
-      {rank <= 3 ? emoji : `#${rank}`}
+      {rank <= 3 ? `No. ${rank}` : `#${rank}`}
     </Badge>
   );
 }

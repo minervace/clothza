@@ -210,7 +210,7 @@ export default function LookbooksPage() {
                     <div>
                       <div style={{ fontWeight: 700, fontSize: 'var(--text-body)', color: 'var(--text-primary)', lineHeight: 1.2 }}>{rank.creator}</div>
                       <div style={{ fontSize: 'var(--text-overline)', color: 'var(--text-tertiary)', marginTop: 4 }}>
-                        {formatCompactNumber(rank.totalLikes)} ♥ · {rank.lookbooks.length} {rank.lookbooks.length === 1 ? 'look' : 'looks'}
+                        {formatCompactNumber(rank.totalLikes)} likes · {rank.lookbooks.length} {rank.lookbooks.length === 1 ? 'look' : 'looks'}
                       </div>
                     </div>
                   </motion.div>

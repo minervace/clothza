@@ -14,10 +14,7 @@ export const toast = {
     hotToast.error(msg, { duration: 5000 }),
 
   warning: (msg: string) =>
-    hotToast(msg, {
-      duration: 4000,
-      icon:     '⚠️',
-    }),
+    hotToast(msg, { duration: 4000, icon: '⚠' }),
 
   info: (msg: string) =>
     hotToast(msg, { duration: 3500 }),
