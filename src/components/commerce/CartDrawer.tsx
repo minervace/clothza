@@ -92,7 +92,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             <Link
               to="/checkout"
               onClick={onClose}
-              className="btn btn-accent btn-pill btn-lg"
+              className="btn btn-accent btn-lg"
               style={{ textAlign: 'center', width: '100%' }}
             >
               Checkout — {formatPrice(total)}

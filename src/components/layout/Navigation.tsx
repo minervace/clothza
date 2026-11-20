@@ -1,6 +1,6 @@
 // ============================================================
 // components/layout/Navigation.tsx — Clothza v4.0
-// Floating pill-shaped glass navbar + mobile bottom tab bar
+// Solid masthead navbar + mobile bottom tab bar
 // Scroll > 80px → height shrinks + blur intensifies
 // ============================================================
 
@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, Sun, Moon, Heart, ShoppingCart, User,
   LogOut, LayoutDashboard, ShieldCheck, Package,
-  Home, BookOpen, Sparkles, ChevronDown, Monitor,
+  Home, BookOpen, Scissors, ChevronDown, Monitor,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useMarketplace } from '@/hooks/useMarketplace';
@@ -96,20 +96,18 @@ export function Navigation() {
   const navLinks = [
     { to: '/',         label: 'Browse'       },
     { to: '/lookbooks', label: 'Lookbooks'   },
-    { to: '/studio',   label: '✨ Studio'    },
+    { to: '/studio',   label: 'Studio'      },
   ];
 
   return (
     <>
-      {/* ── Desktop Floating Navbar ─────────────────────── */}
+      {/* ── Desktop Masthead ─────────────────────────────── */}
       <nav className="nav-wrapper" aria-label="Main navigation">
-        <motion.div
-          className={clsx('nav-pill glass-nav', scrolled && 'scrolled')}
-          animate={{ paddingTop: scrolled ? 8 : 12, paddingBottom: scrolled ? 8 : 12 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        <div
+          className={clsx('nav-pill', scrolled && 'scrolled')}
         >
           {/* Logo */}
-          <Link to="/" className="nav-logo text-gradient" aria-label="Clothza home">
+          <Link to="/" className="nav-logo" aria-label="Clothza home">
             Clothza
           </Link>
 
@@ -443,9 +441,9 @@ export function Navigation() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-          </div>
-        </motion.div>
+             </div>
+           </div>
+         </div>
       </nav>
 
       {/* ── Mobile Bottom Tab Bar ───────────────────────── */}
@@ -491,7 +489,7 @@ function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycl
   const tabs = [
     { to: '/',         icon: Home,         label: 'Browse'    },
     { to: '/lookbooks', icon: BookOpen,    label: 'Lookbooks' },
-    { to: '/studio',   icon: Sparkles,     label: 'Studio'    },
+    { to: '/studio',   icon: Scissors,     label: 'Studio'    },
     { to: '/favorites', icon: Heart,     label: 'Saved',    badge: favCount },
     { to: '/orders',    icon: User,       label: 'Orders'   },
   ];

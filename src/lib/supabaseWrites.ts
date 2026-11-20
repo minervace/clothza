@@ -6,7 +6,9 @@
 // ============================================================
 
 import supabase, { isSupabaseConfigured } from '@/lib/supabase';
-import type { Order, Review, Product, Store } from '@/context/MarketplaceContext';
+import type {
+  Order, Review, Product, Store,
+} from '@/context/MarketplaceContext';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

@@ -242,9 +242,10 @@ export const PLATFORM_STATS = [
 ] as const;
 
 // ── Demo Credentials ─────────────────────────────────────────
+// Used only when Supabase is not configured. The admin passcode
+// lives solely as a SHA-256 digest in lib/crypto.ts.
 export const DEMO_CREDENTIALS = {
   customer: { email: 'demo@clothza.com', password: 'demo1234' },
-  admin:    { passcode: 'clothzaadmin2026' },
 } as const;
 
 // ── Tracking ID Prefix ───────────────────────────────────────

@@ -133,10 +133,10 @@ export default function LookbooksPage() {
               Every lookbook is a story. Browse editorial collections crafted by our tastemakers — or build your own in the Studio.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 32 }}>
-              <Link to="/studio" className="btn btn-accent btn-pill btn-lg">
+              <Link to="/studio" className="btn btn-accent btn-lg">
                 <Sparkles size={15} /> Create a Lookbook
               </Link>
-              <a href="#lookbooks" className="btn btn-outline btn-pill btn-lg">Browse All</a>
+              <a href="#lookbooks" className="btn btn-outline btn-lg">Browse All</a>
             </div>
 
             {/* Stats */}

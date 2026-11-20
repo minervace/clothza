@@ -37,6 +37,7 @@ import {
   type AuthResult,
 } from '@/lib/supabaseAuth';
 import { generateId, generateTrackingId } from '@/lib/crypto';
+import { DEMO_CREDENTIALS } from '@/lib/constants';
 import { calcOrderTotal, applyCoupon, slugify } from '@/lib/formatters';
 import { optimizeImageUrl } from '@/lib/formatters';
 
@@ -1447,18 +1448,16 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
       return Boolean(profile);
     }
 
-    // Demo mode — no backend configured
-    if (email === 'demo@clothza.com' && password === 'demo1234') {
+    // Demo mode — no backend configured, so only the published
+    // demo account can sign in. No passwordless access to the
+    // seeded seller accounts.
+    const demo = DEMO_CREDENTIALS.customer;
+    if (email === demo.email && password === demo.password) {
       const user = BASE_USERS.find(u => u.email === email);
       if (user) {
         dispatch({ type: 'SET_USER', payload: user });
         return true;
       }
-    }
-    const user = BASE_USERS.find(u => u.email === email);
-    if (user) {
-      dispatch({ type: 'SET_USER', payload: user });
-      return true;
     }
     return false;
   }, []);

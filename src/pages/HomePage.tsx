@@ -7,7 +7,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, X, SlidersHorizontal,
-  Sparkles, ArrowRight,
+  ArrowRight,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useMarketplace } from '@/hooks/useMarketplace';
@@ -104,11 +104,13 @@ export default function HomePage() {
 
   const heroCovers = useMemo(
     () =>
-      state.lookbooks
-        .map(lb => lb.coverImage)
+      [
+        ...state.lookbooks.map(lb => lb.coverImage),
+        ...state.products.map(p => p.images[0]),
+      ]
         .filter((src): src is string => Boolean(src))
         .slice(0, 3),
-    [state.lookbooks]
+    [state.lookbooks, state.products]
   );
 
   const resetFilters = useCallback(() => {
@@ -143,55 +145,49 @@ export default function HomePage() {
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section
         style={{
-          paddingTop:    '100px',
-          paddingBottom: '64px',
+          paddingTop:    '96px',
+          paddingBottom: '72px',
           background:    'var(--bg-primary)',
-          position:      'relative',
-          overflow:      'hidden',
+          borderBottom:  '1px solid var(--border)',
         }}
       >
-        {/* Background gradient orbs */}
-        <div style={{ position: 'absolute', top: '-20%', right: '-10%', width: '50vw', height: '50vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(122,193,131,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-10%', left: '-5%', width: '35vw', height: '35vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(210,168,101,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="container">
           <div className="hero-grid">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            style={{ maxWidth: 680 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            style={{ maxWidth: 640 }}
           >
             {/* Eyebrow */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--accent-light)', color: 'var(--accent)', padding: '6px 14px', borderRadius: 'var(--radius-pill)', fontSize: 'var(--text-overline)', fontWeight: 700, letterSpacing: 'var(--tracking-widest)', textTransform: 'uppercase', marginBottom: 24 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.05, duration: 0.4 }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 10, color: 'var(--text-secondary)', fontSize: 'var(--text-overline)', fontWeight: 600, letterSpacing: 'var(--tracking-widest)', textTransform: 'uppercase', marginBottom: 28 }}
             >
-              <Sparkles size={12} />
-              {formatCompactNumber(state.products.length)}+ pieces · {state.stores.length} boutiques
+              <span style={{ width: 24, height: 1, background: 'var(--border-strong)' }} />
+              {formatCompactNumber(state.products.length)} piece{state.products.length === 1 ? '' : 's'} · {state.stores.length} boutique{state.stores.length === 1 ? '' : 's'}
             </motion.div>
 
             {/* Headline */}
             <h1
               style={{
                 fontFamily:    'var(--font-serif)',
-                fontSize:      'clamp(40px, 5.3vw, 68px)',
-                fontWeight:    800,
-                letterSpacing: '-0.03em',
-                lineHeight:    'var(--leading-tight)',
+                fontVariationSettings: "'opsz' 144",
+                fontSize:      'clamp(38px, 4.6vw, 60px)',
+                fontWeight:    500,
+                letterSpacing: '-0.015em',
+                lineHeight:    1.08,
                 color:         'var(--text-primary)',
-                marginBottom:  20,
+                marginBottom:  24,
               }}
             >
-              Where designers
-              <br />
-              meet{' '}
+              Where designers meet{' '}
               <span className="text-gradient">tastemakers.</span>
             </h1>
 
-            <p style={{ fontSize: 'var(--text-subtitle)', color: 'var(--text-secondary)', lineHeight: 'var(--leading-relaxed)', maxWidth: 520 }}>
+            <p style={{ fontSize: 'var(--text-subtitle)', color: 'var(--text-secondary)', lineHeight: 'var(--leading-relaxed)', maxWidth: 470 }}>
               Discover South Asia's most curated independent boutiques. Shop limited editions, style your own lookbooks, and join a community that cares about craft.
             </p>
 
@@ -199,29 +195,30 @@ export default function HomePage() {
             <div style={{ display: 'flex', gap: 12, marginTop: 36, flexWrap: 'wrap' }}>
               <motion.button
                 onClick={() => setView('products')}
-                className="btn btn-accent btn-pill btn-lg"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+                className="btn btn-accent btn-lg"
+                whileHover={{ y: -1 }}
+                whileTap={{ y: 0 }}
+                transition={{ duration: 0.15 }}
               >
                 Explore Products <ArrowRight size={16} />
               </motion.button>
-              <Link to="/lookbooks" className="btn btn-outline btn-pill btn-lg">
+              <Link to="/lookbooks" className="btn btn-outline btn-lg">
                 Browse Lookbooks
               </Link>
             </div>
 
             {/* Stats row */}
-            <div style={{ display: 'flex', gap: 32, marginTop: 48 }}>
+            <div style={{ display: 'flex', gap: 40, marginTop: 48, borderTop: '1px solid var(--border)', paddingTop: 24 }}>
               {[
                 { label: 'Boutiques', value: state.stores.length       },
                 { label: 'Products',  value: state.products.length     },
                 { label: 'Lookbooks', value: state.lookbooks.length    },
               ].map(item => (
                 <div key={item.label}>
-                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, fontVariationSettings: "'opsz' 72", color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                     {formatCompactNumber(item.value)}
                   </div>
-                  <div style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', fontWeight: 500, marginTop: 2 }}>{item.label}</div>
+                  <div style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', fontWeight: 500, marginTop: 4 }}>{item.label}</div>
                 </div>
               ))}
             </div>

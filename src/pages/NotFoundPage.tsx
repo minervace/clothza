@@ -75,7 +75,7 @@ export default function NotFoundPage() {
           </div>
 
           <div style={{ display: 'flex', gap: 12 }}>
-            <Link to="/" className="btn btn-accent btn-pill btn-lg">
+            <Link to="/" className="btn btn-accent btn-lg">
               <ArrowLeft size={16} /> Explore Collections
             </Link>
           </div>

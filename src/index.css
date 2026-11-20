@@ -4,63 +4,64 @@
    ============================================================ */
 
 /* ── GOOGLE FONTS IMPORT FALLBACK (if not in <head>) ── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 /* ============================================================
    1. CSS CUSTOM PROPERTIES — DESIGN TOKENS
    ============================================================ */
 
-/* ── LIGHT MODE: "The Editorial Ivory" ── */
+/* ── LIGHT MODE: "Ink on paper" ── */
 :root {
   /* Backgrounds */
-  --bg-primary:      #FAF9F6;   /* Warm designer ivory */
-  --bg-secondary:    #F3F1EC;   /* Soft warm linen */
-  --bg-tertiary:     #EAE6DF;   /* Warm oatmeal sand */
-  --bg-card:         #FFFFFF;
+  --bg-primary:      #F7F5F0;   /* Paper */
+  --bg-secondary:    #F0EDE5;   /* Card stock */
+  --bg-tertiary:     #E7E3D8;   /* rules / wells */
+  --bg-card:         #FCFBF8;
 
   /* Text */
-  --text-primary:    #1C1917;   /* Rich warm charcoal */
-  --text-secondary:  #57534E;   /* Stone brown */
-  --text-tertiary:   #A8A29E;   /* Warm taupe gray */
+  --text-primary:    #191612;   /* Ink */
+  --text-secondary:  #57503F;   /* warm graphite */
+  --text-tertiary:   #8C8574;   /* faded print */
 
   /* Borders */
-  --border:          #E2DDD5;
+  --border:          #DCD7CA;
+  --border-strong:   #191612;   /* ink hairline for primary frames */
 
-  /* Accent — Designer Cognac */
-  --accent:          #8C6239;
-  --accent-hover:    #7A5430;
-  --accent-light:    rgba(140, 98, 57, 0.08);
-  --accent-fg:       #FFFFFF;
+  /* Accent — madder rust */
+  --accent:          #8F3E14;
+  --accent-hover:    #75320E;
+  --accent-light:    rgba(143, 62, 20, 0.07);
+  --accent-fg:       #FCFBF8;
 
   /* Semantic */
-  --danger:          #DC2626;
-  --danger-light:    rgba(220, 38, 38, 0.08);
-  --success:         #16A34A;
-  --success-light:   rgba(22, 163, 74, 0.08);
-  --warning:         #D97706;
-  --warning-light:   rgba(217, 119, 6, 0.08);
+  --danger:          #B3261E;
+  --danger-light:    rgba(179, 38, 30, 0.07);
+  --success:         #3D6B35;
+  --success-light:   rgba(61, 107, 53, 0.09);
+  --warning:         #9A6B0B;
+  --warning-light:   rgba(154, 107, 11, 0.09);
 
-  /* Glass */
-  --glass-bg:        rgba(250, 249, 246, 0.75);
-  --glass-border:    rgba(226, 221, 213, 0.5);
+  /* Glass — retired; kept for compatibility as solid surfaces */
+  --glass-bg:        #F7F5F0;
+  --glass-border:    #DCD7CA;
 
-  /* Shadows */
-  --shadow-card:     0 1px 3px rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.04);
-  --shadow-elevated: 0 8px 40px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-glow:     0 0 25px 4px rgba(140, 98, 57, 0.18);
-  --shadow-focus:    0 0 0 3px rgba(140, 98, 57, 0.2);
+  /* Shadows — hairlines carry depth, not blur */
+  --shadow-card:     none;
+  --shadow-elevated: 0 16px 40px rgba(25, 22, 18, 0.10);
+  --shadow-glow:     none;
+  --shadow-focus:    0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent);
 
   /* Subscription Tier Colors */
-  --tier-free:       #A8A29E;
-  --tier-bronze:     #CD7F32;
-  --tier-silver:     #A8A9AD;
-  --tier-gold:       #D4AF37;
+  --tier-free:       #8C8574;
+  --tier-bronze:     #9C6B3F;
+  --tier-silver:     #7C7A72;
+  --tier-gold:       #8A6D1F;
 
-  /* Radius */
-  --radius-sm:       6px;
-  --radius-md:       10px;
-  --radius-lg:       16px;
-  --radius-xl:       24px;
+  /* Radius — sharper, print-like */
+  --radius-sm:       2px;
+  --radius-md:       4px;
+  --radius-lg:       8px;
+  --radius-xl:       12px;
   --radius-pill:     9999px;
 
   /* Spacing Scale */
@@ -79,41 +80,41 @@
 
   /* Typography */
   --font-sans:   'Outfit', system-ui, -apple-system, sans-serif;
-  --font-serif:  'Playfair Display', 'Georgia', serif;
+  --font-serif:  'Fraunces', 'Iowan Old Style', 'Georgia', serif;
 
   /* Font Sizes — Typography Scale */
-  --text-overline: 10px;
+  --text-overline: 11px;
   --text-caption:  12px;
-  --text-body:     14px;
+  --text-body:     15px;
   --text-primary-size: 16px;
-  --text-subtitle: 18px;
-  --text-heading:  24px;
-  --text-title:    36px;
-  --text-display:  64px;
+  --text-subtitle: 17px;
+  --text-heading:  22px;
+  --text-title:    30px;
+  --text-display:  56px;
 
   /* Font Weights */
-  --weight-thin:       100;
+  --weight-thin:       300;
   --weight-light:      300;
   --weight-regular:    400;
   --weight-medium:     500;
   --weight-semibold:   600;
   --weight-bold:       700;
-  --weight-extrabold:  800;
-  --weight-black:      900;
+  --weight-extrabold:  700;
+  --weight-black:      700;
 
   /* Line Heights */
-  --leading-tight:   1.2;
+  --leading-tight:   1.15;
   --leading-snug:    1.35;
-  --leading-normal:  1.5;
+  --leading-normal:  1.55;
   --leading-relaxed: 1.65;
 
   /* Letter Spacing */
-  --tracking-tighter: -0.04em;
-  --tracking-tight:   -0.02em;
+  --tracking-tighter: -0.02em;
+  --tracking-tight:   -0.01em;
   --tracking-normal:  0em;
-  --tracking-wide:    0.05em;
-  --tracking-wider:   0.1em;
-  --tracking-widest:  0.2em;
+  --tracking-wide:    0.04em;
+  --tracking-wider:   0.08em;
+  --tracking-widest:  0.16em;
 
   /* Z-Index Scale */
   --z-below:     -1;
@@ -127,45 +128,46 @@
   --z-tooltip:    600;
 }
 
-/* ── DARK MODE: "The Obsidian Theatre" ── */
+/* ── DARK MODE: "Midnight press" ── */
 .dark {
   /* Backgrounds */
-  --bg-primary:      #0C0B0A;   /* Rich warm obsidian */
-  --bg-secondary:    #161413;   /* Charcoal brown-black */
-  --bg-tertiary:     #22201E;   /* Dark mud stone */
-  --bg-card:         #161413;
+  --bg-primary:      #131110;   /* Ink black */
+  --bg-secondary:    #1B1916;   /* Pressed charcoal */
+  --bg-tertiary:     #262319;   /* wells */
+  --bg-card:         #1B1916;
 
   /* Text */
-  --text-primary:    #F5F2EB;   /* Warm cream white */
-  --text-secondary:  #B5ADA5;   /* Muted cashmere beige */
-  --text-tertiary:   #6C645C;   /* Dark bronze gray */
+  --text-primary:    #EFEAE0;   /* Cream */
+  --text-secondary:  #B3AC9C;   /* muted bone */
+  --text-tertiary:   #7A7365;   /* faded */
 
   /* Borders */
-  --border:          #2A2724;
+  --border:          #2C2921;
+  --border-strong:   #EFEAE0;
 
-  /* Accent — Luminous Champagne Gold */
-  --accent:          #E5BA93;
-  --accent-hover:    #ECC89F;
-  --accent-light:    rgba(229, 186, 147, 0.1);
-  --accent-fg:       #0C0B0A;
+  /* Accent — soft copper */
+  --accent:          #D99A62;
+  --accent-hover:    #E4AC77;
+  --accent-light:    rgba(217, 154, 98, 0.10);
+  --accent-fg:       #131110;
 
   /* Semantic */
-  --danger:          #F87171;
-  --danger-light:    rgba(248, 113, 113, 0.1);
-  --success:         #4ADE80;
-  --success-light:   rgba(74, 222, 128, 0.1);
-  --warning:         #FCD34D;
-  --warning-light:   rgba(252, 211, 77, 0.1);
+  --danger:          #E5726A;
+  --danger-light:    rgba(229, 114, 106, 0.10);
+  --success:         #7FB98A;
+  --success-light:   rgba(127, 185, 138, 0.10);
+  --warning:         #D9B45C;
+  --warning-light:   rgba(217, 180, 92, 0.10);
 
   /* Glass */
-  --glass-bg:        rgba(12, 11, 10, 0.8);
-  --glass-border:    rgba(42, 39, 36, 0.6);
+  --glass-bg:        #131110;
+  --glass-border:    #2C2921;
 
   /* Shadows */
-  --shadow-card:     0 1px 3px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.2);
-  --shadow-elevated: 0 8px 40px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-glow:     0 0 25px 4px rgba(229, 186, 147, 0.2);
-  --shadow-focus:    0 0 0 3px rgba(229, 186, 147, 0.25);
+  --shadow-card:     none;
+  --shadow-elevated: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --shadow-glow:     none;
+  --shadow-focus:    0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent);
 }
 
 /* ============================================================
@@ -396,8 +398,12 @@ button, a, input, select, textarea {
    4. TYPOGRAPHY SYSTEM
    ============================================================ */
 
-/* Serif (Editorial) — Playfair Display */
-.font-serif { font-family: var(--font-serif); }
+/* Serif (Editorial) — Fraunces, optical size on */
+.font-serif {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: 'opsz' 72;
+}
 
 /* Sans (Modern) — Outfit */
 .font-sans  { font-family: var(--font-sans); }
@@ -433,43 +439,37 @@ button, a, input, select, textarea {
 .text-heading {
   font-family: var(--font-serif);
   font-size: var(--text-heading);
-  font-weight: var(--weight-bold);
-  line-height: var(--leading-tight);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
   letter-spacing: var(--tracking-tight);
 }
 
 .text-title {
   font-family: var(--font-serif);
   font-size: var(--text-title);
-  font-weight: var(--weight-bold);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tighter);
+  font-weight: var(--weight-semibold);
+  line-height: 1.1;
+  letter-spacing: var(--tracking-tight);
 }
 
 .text-display {
   font-family: var(--font-serif);
-  font-size: clamp(40px, 8vw, var(--text-display));
-  font-weight: var(--weight-black);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tighter);
+  font-size: clamp(38px, 6.5vw, var(--text-display));
+  font-weight: var(--weight-medium);
+  font-variation-settings: 'opsz' 144;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
 }
 
-/* Gradient Text */
+/* Accent text — solid, not gradient */
 .text-gradient {
-  background: linear-gradient(135deg, var(--accent) 0%, #C49A6C 50%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  background-size: 200% auto;
+  color: var(--accent);
+  font-style: italic;
 }
 
 .text-gradient-animated {
-  background: linear-gradient(135deg, var(--accent) 0%, #C49A6C 50%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  background-size: 200% auto;
-  animation: shimmer 4s linear infinite;
+  color: var(--accent);
+  font-style: italic;
 }
 
 /* Color Utilities */
@@ -482,31 +482,23 @@ button, a, input, select, textarea {
 .text-warning   { color: var(--warning); }
 
 /* ============================================================
-   5. GLASSMORPHISM UTILITIES
+   5. SURFACES — solid paper, hairline edges (glass retired)
    ============================================================ */
 
 .glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-card);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
 }
 
 .glass-elevated {
-  background: var(--glass-bg);
-  backdrop-filter: blur(40px) saturate(200%);
-  -webkit-backdrop-filter: blur(40px) saturate(200%);
-  border: 1px solid var(--glass-border);
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
   box-shadow: var(--shadow-elevated);
 }
 
 .glass-nav {
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px) saturate(200%);
-  -webkit-backdrop-filter: blur(24px) saturate(200%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-card);
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
 }
 
 /* ============================================================
@@ -682,42 +674,35 @@ button, a, input, select, textarea {
 }
 
 /* ============================================================
-   9. MICRO-INTERACTION UTILITIES
+   9. MICRO-INTERACTION UTILITIES — quiet, precise
    ============================================================ */
 
-/* Button hover: scale(1.02) + shadow elevation */
 .hover-lift {
-  transition: transform var(--dur-fast) var(--spring),
-              box-shadow var(--dur-fast) var(--spring);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
 }
 .hover-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-elevated);
+  border-color: var(--border-strong);
 }
 .hover-lift:active {
-  transform: translateY(0) scale(0.98);
-  box-shadow: var(--shadow-card);
+  background-color: var(--bg-secondary);
 }
 
-/* Card hover: translateY(-5px) + accent border + elevated shadow */
+/* Card hover: ink border, no lift theatrics */
 .card-hover {
-  transition: transform var(--dur-normal) var(--spring),
-              box-shadow var(--dur-normal) var(--spring),
-              border-color var(--dur-normal) var(--spring);
+  transition: border-color var(--dur-fast) var(--ease-out);
   border: 1px solid var(--border);
 }
 .card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-elevated);
-  border-color: var(--accent);
+  border-color: var(--border-strong);
 }
 
 /* Image zoom inside card */
 .img-zoom {
-  transition: transform var(--dur-slow) var(--spring);
+  transition: transform 600ms var(--ease-out);
 }
 .img-zoom:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
 }
 
 /* Image zoom container — parent must be overflow:hidden */
@@ -726,86 +711,67 @@ button, a, input, select, textarea {
 }
 .img-zoom-container img,
 .img-zoom-container .img-zoom {
-  transition: transform var(--dur-slow) var(--spring);
+  transition: transform 600ms var(--ease-out);
 }
 .img-zoom-container:hover img,
 .img-zoom-container:hover .img-zoom {
-  transform: scale(1.07);
+  transform: scale(1.05);
 }
 
 /* Button base micro-interactions */
 .btn-base {
-  transition: transform var(--dur-fast) var(--spring),
-              box-shadow var(--dur-fast) var(--spring),
-              background-color var(--dur-fast) var(--spring),
-              color var(--dur-fast) var(--spring),
-              border-color var(--dur-fast) var(--spring);
-}
-.btn-base:hover  { transform: scale(1.02); }
-.btn-base:active { transform: scale(0.98); }
-
-/* Glow pulse animation for accent elements */
-.glow-pulse {
-  animation: glow-pulse 3s ease-in-out infinite;
-}
-
-/* Spin slow for loading indicators */
-.spin-slow {
-  animation: spin-slow 3s linear infinite;
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
 }
 
 /* Fade in animation */
 .animate-fade-in {
-  animation: fade-in var(--dur-normal) var(--spring) both;
+  animation: fade-in var(--dur-normal) var(--ease-out) both;
 }
 
 /* Slide up animation */
 .animate-slide-up {
-  animation: slide-up var(--dur-normal) var(--spring) both;
+  animation: slide-up var(--dur-normal) var(--ease-out) both;
 }
 
 /* Scale in */
 .animate-scale-in {
-  animation: scale-in var(--dur-normal) var(--spring) both;
+  animation: scale-in var(--dur-normal) var(--ease-out) both;
 }
 
 /* Stagger delay utilities */
-.stagger-1 { animation-delay: 50ms; }
-.stagger-2 { animation-delay: 100ms; }
-.stagger-3 { animation-delay: 150ms; }
-.stagger-4 { animation-delay: 200ms; }
-.stagger-5 { animation-delay: 250ms; }
-.stagger-6 { animation-delay: 300ms; }
-.stagger-7 { animation-delay: 350ms; }
-.stagger-8 { animation-delay: 400ms; }
-.stagger-9 { animation-delay: 450ms; }
+.stagger-1 { animation-delay: 40ms; }
+.stagger-2 { animation-delay: 80ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 160ms; }
+.stagger-5 { animation-delay: 200ms; }
+.stagger-6 { animation-delay: 240ms; }
+.stagger-7 { animation-delay: 280ms; }
+.stagger-8 { animation-delay: 320ms; }
+.stagger-9 { animation-delay: 360ms; }
 
 /* ============================================================
-   10. CARD SYSTEM
+   10. CARD SYSTEM — hairline frames, no floating
    ============================================================ */
 
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
 .card-elevated {
   background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
 }
 
 .card-glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 /* ============================================================
@@ -820,12 +786,10 @@ button, a, input, select, textarea {
   font-weight: var(--weight-regular);
   color: var(--text-primary);
   background: var(--bg-card);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   outline: none;
-  transition: border-color var(--dur-fast) var(--spring),
-              box-shadow var(--dur-fast) var(--spring),
-              background-color var(--dur-fast) var(--spring);
+  transition: border-color var(--dur-fast) var(--ease-out);
   -webkit-appearance: none;
   appearance: none;
 }
@@ -835,12 +799,12 @@ button, a, input, select, textarea {
 }
 
 .input-base:hover:not(:disabled) {
-  border-color: var(--text-secondary);
+  border-color: var(--border-strong);
 }
 
 .input-base:focus {
-  border-color: var(--accent);
-  box-shadow: var(--shadow-focus);
+  border-color: var(--border-strong);
+  box-shadow: none;
 }
 
 .input-base:disabled {
@@ -878,45 +842,44 @@ button, a, input, select, textarea {
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-6);
+  padding: var(--space-3) var(--space-5);
   font-family: var(--font-sans);
   font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-medium);
   line-height: 1;
-  border-radius: var(--radius-md);
-  border: 1.5px solid transparent;
+  letter-spacing: var(--tracking-wide);
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
   text-decoration: none;
-  transition: transform var(--dur-fast) var(--spring),
-              box-shadow var(--dur-fast) var(--spring),
-              background-color var(--dur-fast) var(--spring),
-              color var(--dur-fast) var(--spring),
-              border-color var(--dur-fast) var(--spring),
-              opacity var(--dur-fast) var(--spring);
+  transition: background-color var(--dur-fast) var(--ease-out),
+              color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              opacity var(--dur-fast) var(--ease-out);
 }
 
-.btn:hover  { transform: scale(1.02); }
-.btn:active { transform: scale(0.98); }
+.btn:hover  { background-color: var(--bg-secondary); }
+.btn:active { background-color: var(--bg-tertiary); }
 
 .btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  transform: none;
 }
 
-/* Primary button */
+/* Primary button — ink */
 .btn-primary {
   background: var(--text-primary);
   color: var(--bg-primary);
   border-color: var(--text-primary);
 }
 .btn-primary:hover:not(:disabled) {
-  box-shadow: var(--shadow-elevated);
+  background: var(--text-secondary);
+  border-color: var(--text-secondary);
 }
 
-/* Accent button */
+/* Accent button — madder */
 .btn-accent {
   background: var(--accent);
   color: var(--accent-fg);
@@ -924,7 +887,7 @@ button, a, input, select, textarea {
 }
 .btn-accent:hover:not(:disabled) {
   background: var(--accent-hover);
-  box-shadow: var(--shadow-glow);
+  border-color: var(--accent-hover);
 }
 
 /* Ghost button */
@@ -938,16 +901,15 @@ button, a, input, select, textarea {
   color: var(--text-primary);
 }
 
-/* Outline button */
+/* Outline button — ink hairline */
 .btn-outline {
   background: transparent;
   color: var(--text-primary);
-  border-color: var(--border);
+  border-color: var(--border-strong);
 }
 .btn-outline:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-  box-shadow: var(--shadow-focus);
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 /* Danger button */
@@ -986,7 +948,7 @@ button, a, input, select, textarea {
 }
 
 .btn-pill {
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
 }
 
 .btn-icon {
@@ -1003,12 +965,14 @@ button, a, input, select, textarea {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 3px var(--space-2);
-  font-size: var(--text-overline);
+  padding: 2px 8px;
+  font-size: 10px;
   font-weight: var(--weight-semibold);
-  letter-spacing: var(--tracking-widest);
+  letter-spacing: var(--tracking-wider);
   text-transform: uppercase;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
   white-space: nowrap;
 }
 
@@ -1026,9 +990,9 @@ button, a, input, select, textarea {
 .badge-gold     { background: rgba(212, 175, 55, 0.15); color: var(--tier-gold); }
 
 /* Rank badges */
-.badge-rank-1   { background: linear-gradient(135deg, #D4AF37, #FFD700); color: #000; }
-.badge-rank-2   { background: linear-gradient(135deg, #A8A9AD, #C0C0C0); color: #000; }
-.badge-rank-3   { background: linear-gradient(135deg, #CD7F32, #B87333); color: #FFF; }
+.badge-rank-1   { background: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); }
+.badge-rank-2   { background: var(--bg-tertiary); color: var(--text-primary); }
+.badge-rank-3   { background: var(--accent-light); color: var(--accent); }
 
 /* ============================================================
    14. NAVIGATION SYSTEM
@@ -1036,19 +1000,22 @@ button, a, input, select, textarea {
 
 .nav-wrapper {
   position: fixed;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: var(--z-sticky);
-  width: calc(100% - 48px);
-  max-width: 1200px;
+  width: 100%;
   padding-top: env(safe-area-inset-top);
-  transition: all var(--dur-normal) var(--spring);
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
 }
 
 .nav-pill {
-  border-radius: var(--radius-xl);
-  padding: var(--space-3) var(--space-6);
+  max-width: 1280px;
+  margin: 0 auto;
+  border-radius: 0;
+  padding: 0 var(--space-6);
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1056,43 +1023,42 @@ button, a, input, select, textarea {
 }
 
 .nav-pill.scrolled {
-  padding-top: var(--space-2);
-  padding-bottom: var(--space-2);
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .nav-logo {
   font-family: var(--font-serif);
-  font-size: 22px;
-  font-weight: var(--weight-bold);
-  letter-spacing: var(--tracking-tight);
+  font-size: 20px;
+  font-weight: var(--weight-semibold);
+  font-variation-settings: 'opsz' 60;
+  letter-spacing: -0.01em;
 }
 
 .nav-link {
-  font-size: var(--text-body);
+  font-size: 14px;
   font-weight: var(--weight-medium);
   color: var(--text-secondary);
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
   position: relative;
-  transition: color var(--dur-fast) var(--spring);
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   left: var(--space-3);
   right: var(--space-3);
-  height: 1.5px;
-  background: var(--accent);
-  border-radius: var(--radius-pill);
+  height: 1px;
+  background: var(--text-primary);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--dur-fast) var(--spring);
+  transition: transform var(--dur-fast) var(--ease-out);
 }
 
 .nav-link:hover {
-  color: var(--accent);
+  color: var(--text-primary);
 }
 
 .nav-link:hover::after,
@@ -1101,7 +1067,8 @@ button, a, input, select, textarea {
 }
 
 .nav-link.active {
-  color: var(--accent);
+  color: var(--text-primary);
+  font-weight: var(--weight-semibold);
 }
 
 /* Bottom Tab Bar — mobile only */
@@ -1482,7 +1449,7 @@ button, a, input, select, textarea {
 
 @media (min-width: 768px) {
   .browse-toolbar {
-    top: 88px;
+    top: 64px;
     padding: 14px 0;
   }
 }
@@ -2298,15 +2265,17 @@ hr {
    ============================================================ */
 
 .footer {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-strong);
   padding: var(--space-16) 0 var(--space-8);
 }
 
 .footer-brand {
   font-family: var(--font-serif);
-  font-size: 28px;
-  font-weight: var(--weight-bold);
+  font-size: 26px;
+  font-weight: var(--weight-semibold);
+  font-variation-settings: 'opsz' 60;
+  letter-spacing: -0.01em;
 }
 
 .footer-grid {
