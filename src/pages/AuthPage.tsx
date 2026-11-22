@@ -3,8 +3,8 @@
 // Sign in / create account against Supabase Auth.
 // ============================================================
 
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, User as UserIcon, ArrowRight } from 'lucide-react';
 import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -30,8 +30,20 @@ function GoogleMark() {
 }
 
 export default function AuthPage() {
-  const { login, signUp, loginWithGoogle } = useMarketplace();
+  const { login, signUp, loginWithGoogle, state, authReady } = useMarketplace();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Where to go after a successful sign-in: back where you came from,
+  // or home. Google returns to /signin, which is why this has to react to
+  // the session appearing rather than only to the button press.
+  const nextPath = (location.state as { from?: string } | null)?.from ?? '/';
+
+  useEffect(() => {
+    if (authReady && state.currentUser) {
+      navigate(nextPath, { replace: true });
+    }
+  }, [authReady, state.currentUser, nextPath, navigate]);
 
   const [mode, setMode] = useState<Mode>('signin');
   const [accountType, setAccountType] = useState<'customer' | 'seller'>('customer');

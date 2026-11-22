@@ -5,7 +5,7 @@
 // ============================================================
 
 import type { ReactNode } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate, Link, useLocation } from 'react-router-dom';
 import { ShieldAlert } from 'lucide-react';
 import { useMarketplace } from '@/hooks/useMarketplace';
 import type { Role } from '@/context/MarketplaceContext';
@@ -18,6 +18,7 @@ const ROLE_LABEL: Record<Role, string> = {
 
 export function RequireRole({ roles, children }: { roles: Role[]; children: ReactNode }) {
   const { state, authReady } = useMarketplace();
+  const location = useLocation();
   const user = state.currentUser;
 
   // Wait for the stored/Supabase session before deciding anything, otherwise
@@ -30,7 +31,7 @@ export function RequireRole({ roles, children }: { roles: Role[]; children: Reac
     );
   }
 
-  if (!user) return <Navigate to="/signin" replace />;
+  if (!user) return <Navigate to="/signin" replace state={{ from: location.pathname }} />;
 
   if (!roles.includes(user.role)) {
     return (
