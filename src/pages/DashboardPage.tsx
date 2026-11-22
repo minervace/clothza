@@ -23,10 +23,11 @@ import { toast } from '@/lib/toast';
 import { formatPrice, formatDate, formatRating } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import { optimizeImageUrl } from '@/lib/formatters';
-import type { Product, OrderStatus } from '@/context/MarketplaceContext';
+import type { Product, ProductVariant, OrderStatus } from '@/context/MarketplaceContext';
 import { PRODUCT_CATEGORIES } from '@/lib/constants';
 import { StoreSettings } from '@/components/seller/StoreSettings';
 import { ImageUploadInput } from '@/components/seller/ImageUploadInput';
+import { VariantEditor } from '@/components/seller/VariantEditor';
 
 type DashTab = 'overview' | 'products' | 'orders' | 'messages' | 'coupons' | 'store';
 
@@ -54,6 +55,7 @@ interface ProductFormState {
   isBestSeller: boolean;
   isTrending:   boolean;
   isSponsored:  boolean;
+  variants:     ProductVariant[];
 }
 
 const emptyProductForm = (): ProductFormState => ({
@@ -67,6 +69,7 @@ const emptyProductForm = (): ProductFormState => ({
   isBestSeller: false,
   isTrending:   false,
   isSponsored:  false,
+  variants:     [{ size: 'M', color: 'Default', stock: 0 }],
 });
 
 function productToForm(p: Product): ProductFormState {
@@ -81,6 +84,7 @@ function productToForm(p: Product): ProductFormState {
     isBestSeller: p.isBestSeller ?? false,
     isTrending:   p.isTrending   ?? false,
     isSponsored:  p.isSponsored  ?? false,
+    variants:     p.variants.length > 0 ? p.variants : [{ size: 'M', color: 'Default', stock: 0 }],
   };
 }
 
@@ -109,6 +113,7 @@ function ProductModal({ isOpen, onClose, storeId, editProduct }: ProductModalPro
     if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0)
       return 'A valid price is required.';
     if (!form.images.trim())      return 'At least one image URL is required.';
+    if (form.variants.length === 0) return 'Add at least one size or colour to the inventory.';
     return null;
   };
 
@@ -135,6 +140,7 @@ function ProductModal({ isOpen, onClose, storeId, editProduct }: ProductModalPro
         isBestSeller:   form.isBestSeller,
         isTrending:     form.isTrending,
         isSponsored:    form.isSponsored,
+        variants:       form.variants,
       });
       toast.success('Product updated!');
     } else {
@@ -147,7 +153,7 @@ function ProductModal({ isOpen, onClose, storeId, editProduct }: ProductModalPro
         category:       form.category as Product['category'],
         tags:           tagList,
         images:         imageList,
-        variants:       [{ size: 'M', color: 'Default', stock: 10 }],
+        variants:       form.variants,
         isBestSeller:   form.isBestSeller,
         isTrending:     form.isTrending,
         isSponsored:    form.isSponsored,
@@ -302,6 +308,15 @@ function ProductModal({ isOpen, onClose, storeId, editProduct }: ProductModalPro
             onChange={url => set('images', form.images ? `${form.images}\n${url}` : url)}
             folder="products"
             hint="Uploads go to Supabase Storage and append their link here."
+          />
+          <div style={{ height: 8 }} />
+        </div>
+
+        {/* Inventory */}
+        <div style={{ gridColumn: '1 / -1', marginBottom: 20, marginTop: 4 }}>
+          <VariantEditor
+            variants={form.variants}
+            onChange={variants => setForm(f => ({ ...f, variants }))}
           />
         </div>
 
