@@ -1092,6 +1092,10 @@ button, a, input, select, textarea {
 
   /* Reserve room so the fixed tab bar never covers the end of the page */
   .app-shell { padding-bottom: calc(66px + env(safe-area-inset-bottom)); }
+
+  /* The masthead is in flow (sticky), so the first section needs less
+     top padding than it does under the fixed desktop nav. */
+  .app-shell section:first-of-type { padding-top: 32px; }
 }
 
 .bottom-tab-item {
@@ -1678,6 +1682,27 @@ button, a, input, select, textarea {
   transform: scale(0.96);
 }
 
+
+/* ── Mobile masthead: logo + sign-in, since the desktop nav is hidden ── */
+.mobile-header {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    padding: 10px 16px;
+    padding-top: calc(10px + env(safe-area-inset-top));
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+  }
+}
 
 /* ── Hero specimen plate (no imagery yet) ─────────────────── */
 .hero-plate {
