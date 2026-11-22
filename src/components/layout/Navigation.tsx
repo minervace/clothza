@@ -8,13 +8,14 @@ import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search, Sun, Moon, Heart, ShoppingCart, User,
+  Search, Sun, Moon, Heart, ShoppingCart, User as UserIcon,
   LogOut, LayoutDashboard, ShieldCheck, Package,
   Home, BookOpen, Scissors, ChevronDown, Monitor,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useMarketplace } from '@/hooks/useMarketplace';
 import type { ThemePreference } from '@/hooks/useTheme';
+import type { User } from '@/context/MarketplaceContext';
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useDebounce } from '@/hooks/useDebounce';
 import { isSupabaseConfigured } from '@/lib/supabase';
@@ -361,7 +362,7 @@ export function Navigation() {
                     style={{ borderRadius: '50%', objectFit: 'cover' }}
                   />
                 ) : (
-                  <User size={17} />
+                  <UserIcon size={17} />
                 )}
                 <ChevronDown
                   size={13}
@@ -447,7 +448,7 @@ export function Navigation() {
       </nav>
 
       {/* ── Mobile Bottom Tab Bar ───────────────────────── */}
-      <MobileTabBar cartCount={cartCount} favCount={favCount} themePreference={themePreference} onCycleTheme={cycleTheme} />
+      <MobileTabBar cartCount={cartCount} favCount={favCount} themePreference={themePreference} onCycleTheme={cycleTheme} user={currentUser} onLogout={logout} />
     </>
   );
 }
@@ -483,7 +484,10 @@ function DropdownItem({ icon, label, to }: { icon: React.ReactNode; label: strin
 
 // ── Mobile Bottom Tab Bar ────────────────────────────────────
 
-function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycleTheme }: { cartCount: number; favCount: number; themePreference: ThemePreference; onCycleTheme: () => void }) {
+function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycleTheme, user, onLogout }: {
+  cartCount: number; favCount: number; themePreference: ThemePreference;
+  onCycleTheme: () => void; user: User | null;
+}) {
   const location = useLocation();
 
   const tabs = [
@@ -491,7 +495,6 @@ function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycl
     { to: '/lookbooks', icon: BookOpen,    label: 'Lookbooks' },
     { to: '/studio',   icon: Scissors,     label: 'Studio'    },
     { to: '/favorites', icon: Heart,     label: 'Saved',    badge: favCount },
-    { to: '/orders',    icon: User,       label: 'Orders'   },
   ];
 
   return (
@@ -524,6 +527,26 @@ function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycl
           </Link>
         );
       })}
+      {user ? (
+        <Link
+          to={user.role === 'seller' || user.role === 'admin' ? '/dashboard' : '/orders'}
+          className={clsx('bottom-tab-item', (location.pathname === '/dashboard' || location.pathname === '/orders') && 'active')}
+          aria-label={user.role === 'seller' || user.role === 'admin' ? 'Seller dashboard' : 'Your account'}
+        >
+          <UserIcon size={22} />
+          <span className="bottom-tab-label">Account</span>
+        </Link>
+      ) : (
+        <Link
+          to="/signin"
+          className={clsx('bottom-tab-item', location.pathname === '/signin' && 'active')}
+          aria-label="Sign in"
+        >
+          <UserIcon size={22} />
+          <span className="bottom-tab-label">Sign in</span>
+        </Link>
+      )}
+
       <button
         type="button"
         onClick={onCycleTheme}
