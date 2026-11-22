@@ -100,6 +100,39 @@ export async function signInWithGoogle(
   return { ok: true };
 }
 
+/** Changes the password for the signed-in email/password account. */
+export async function changePassword(newPassword: string): Promise<AuthResult> {
+  if (!isSupabaseConfigured) return { ok: false, error: 'Supabase is not configured' };
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true };
+}
+
+/** Updates the display name on the auth user and the profiles row. */
+export async function updateDisplayName(name: string): Promise<AuthResult> {
+  if (!isSupabaseConfigured) return { ok: false, error: 'Supabase is not configured' };
+
+  const { data } = await supabase.auth.getUser();
+  const id = data.user?.id;
+  if (!id) return { ok: false, error: 'Not signed in' };
+
+  const authResult = await supabase.auth.updateUser({ data: { name } });
+  if (authResult.error) return { ok: false, error: authResult.error.message };
+
+  const { error } = await supabase.from('profiles').update({ name }).eq('id', id);
+  if (error) return { ok: false, error: error.message };
+
+  return { ok: true };
+}
+
+/** Whether this account signs in with a password or through Google. */
+export async function getAuthProvider(): Promise<string | null> {
+  if (!isSupabaseConfigured) return null;
+  const { data } = await supabase.auth.getUser();
+  return data.user?.app_metadata?.provider ?? null;
+}
+
 export async function signOut(): Promise<void> {
   if (!isSupabaseConfigured) return;
   await supabase.auth.signOut();

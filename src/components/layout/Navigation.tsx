@@ -404,6 +404,7 @@ export function Navigation() {
                         {(currentUser.role === 'seller' || currentUser.role === 'admin') && (
                           <DropdownItem icon={<LayoutDashboard size={15} />} label="Dashboard" to="/dashboard" />
                         )}
+                        <DropdownItem icon={<UserIcon size={15} />} label="My account" to="/account" />
                         <DropdownItem icon={<Package size={15} />} label="My Orders" to="/orders" />
                         {currentUser.role === 'admin' && (
                           <DropdownItem icon={<ShieldCheck size={15} />} label="Admin Panel" to="/admin" />
@@ -459,7 +460,7 @@ export function Navigation() {
             <SearchIcon size={18} />
           </button>
           <Link
-            to={currentUser ? (currentUser.role === 'seller' || currentUser.role === 'admin' ? '/dashboard' : '/orders') : '/signin'}
+            to={currentUser ? '/account' : '/signin'}
             className="btn btn-ghost btn-icon"
             aria-label={currentUser ? 'Your account' : 'Sign in'}
           >
