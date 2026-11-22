@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clothza — logo studies</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--paper:#FAF7F0;--card:#FDFBF6;--ink:#191612;--rust:#94471B;--rule:#E0DAC9;--graphite:#57503F;--faded:#8C8574}
+  body{background:var(--paper);color:var(--ink);font-family:'Outfit',sans-serif;padding:48px 20px 80px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--graphite);font-weight:600;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .eyebrow:before{content:'';width:28px;height:1px;background:var(--ink)}
+  h1{font-family:'Fraunces',serif;font-variation-settings:'opsz' 144,'SOFT' 100,'WONK' 1;font-size:clamp(30px,4vw,44px);font-weight:500;line-height:1.06;letter-spacing:-.015em;margin-bottom:12px}
+  h1 em{font-style:italic;color:var(--rust)}
+  .lede{max-width:540px;color:var(--graphite);font-size:15px;margin-bottom:40px;line-height:1.6}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .study{border:1px solid var(--rule);border-radius:10px;background:var(--card);overflow:hidden}
+  .stage{display:flex;align-items:center;justify-content:center;height:190px;background:var(--bg,var(--card));border-bottom:1px solid var(--rule);position:relative}
+  .stage.dark{--bg:#161310;background:#161310;border-color:#332E24}
+  .meta{padding:14px 16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .meta .no{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);font-weight:700;margin-bottom:3px}
+  .meta .nm{font-family:'Fraunces',serif;font-size:16px;font-weight:600}
+  .meta .ds{font-size:12.5px;color:var(--faded);line-height:1.4;margin-top:2px}
+  .sizes{display:flex;gap:10px;align-items:center;padding:12px 16px;border-top:1px solid var(--rule)}
+  .sizes span{font-size:10px;color:var(--faded);letter-spacing:.1em;text-transform:uppercase}
+  footer{margin-top:48px;border-top:1px solid var(--ink);padding-top:14px;font-size:12px;color:var(--faded);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  /* --- shared logo styles --- */
+  .word{font-family:'Fraunces',serif;font-variation-settings:'opsz' 144,'SOFT' 100,'WONK' 1;font-weight:500;letter-spacing:-.02em}
+  .mono{font-family:'Fraunces',serif;font-variation-settings:'opsz' 144,'SOFT' 100,'WONK' 1;font-weight:500}
+
+  /* 1 stitched monogram */
+  .mark-stitch{width:96px;height:96px;border:1.5px solid var(--ink);border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative}
+  .mark-stitch:before{content:'';position:absolute;inset:6px;border:1px dashed rgba(25,22,18,.45);border-radius:2px}
+  .mark-stitch span{font-size:56px;line-height:1;margin-top:-4px}
+
+  /* 2 needle C */
+  .mark-needle svg{display:block}
+
+  /* 3 tag */
+  .mark-tag{position:relative;width:110px;height:96px}
+  .mark-tag svg{display:block}
+
+  /* 4 weave */
+  .mark-weave{width:96px;height:96px}
+
+  /* 5 seal */
+  .mark-seal{width:104px;height:104px;border:1px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+  .mark-seal:after{content:'';position:absolute;inset:5px;border:1px solid rgba(25,22,18,.28);border-radius:50%}
+  .mark-seal span{font-size:44px;line-height:1;margin-top:-2px}
+
+  /* 6 fold */
+  .mark-fold{width:96px;height:96px;border:1.5px solid var(--ink);border-radius:4px;position:relative;overflow:hidden}
+  .mark-fold:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 49.6%,var(--ink) 49.6%,var(--ink) 50.4%,transparent 50.4%)}
+  .mark-fold:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(25,22,18,.14) 0 1px,transparent 1px 7px)}
+  .mark-fold span{position:absolute;left:8px;bottom:4px;font-size:26px;z-index:2;background:var(--card);padding:0 3px}
+
+  /* small-size row */
+  .small{display:flex;align-items:center;gap:8px}
+  .small .dot{display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--card);border-radius:4px;font-family:'Fraunces',serif;font-weight:500}
+  .s32{width:32px;height:32px;font-size:19px}
+  .s20{width:20px;height:20px;font-size:12px}
+  .s16{width:16px;height:16px;font-size:10px}
+
+  .wordmark-row{display:flex;align-items:center;gap:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Identity studies</div>
+  <h1>Six marks for <em>Clothza.</em></h1>
+  <p class="lede">Each is drawn to survive at 16px in a browser tab and on a shop sign. Pick a number and I will build it out properly — favicon, app icon, social avatar and the Google consent logo.</p>
+
+  <div class="grid">
+
+    <!-- 01 stitched monogram -->
+    <div class="study">
+      <div class="stage">
+        <div class="mark-stitch"><span class="mono">C</span></div>
+      </div>
+      <div class="meta">
+        <div>
+          <div class="no">01</div>
+          <div class="nm">Stitched monogram</div>
+          <div class="ds">A serif C inside a tailor's stitch border. Reads as made, not printed.</div>
+        </div>
+      </div>
+      <div class="sizes">
+        <span>Small</span>
+        <div class="small">
+          <div class="dot s32">C</div>
+          <div class="dot s20">C</div>
+          <div class="dot s16">C</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 needle and thread -->
+    <div class="study">
+      <div class="stage">
+        <svg width="110" height="110" viewBox="0 0 110 110" fill="none" aria-label="Needle and thread C">
+          <path d="M78 30c-8-7-18-11-29-11-22 0-40 16-40 36s18 36 40 36c11 0 21-4 29-11"
+                stroke="#191612" stroke-width="7" stroke-linecap="round"/>
+          <path d="M80 24c8-6 18-3 20 4 1 5-3 9-8 9-4 0-7-2-9-5"
+                stroke="#94471B" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+          <circle cx="92" cy="27" r="2.2" fill="#94471B"/>
+        </svg>
+      </div>
+      <div class="meta">
+        <div>
+          <div class="no">02</div>
+          <div class="nm">Needle &amp; thread</div>
+          <div class="ds">An open C with a needle pulling a rust thread through the gap.</div>
+        </div>
+      </div>
+      <div class="sizes">
+        <span>Small</span>
+        <div class="small">
+          <div class="dot s32">C</div>
+          <div class="dot s20">C</div>
+          <div class="dot s16">C</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 swing tag -->
+    <div class="study">
+      <div class="stage">
+        <div class="mark-tag">
+          <svg width="110" height="96" viewBox="0 0 110 96" fill="none" aria-label="Swing tag">
+            <path d="M14 6h52l34 34-46 46L14 48V6z" fill="#FDFBF6" stroke="#191612" stroke-width="3" stroke-linejoin="round"/>
+            <circle cx="30" cy="22" r="5" fill="none" stroke="#191612" stroke-width="2.5"/>
+            <text x="52" y="60" font-family="Fraunces,serif" font-size="34" font-weight="500" fill="#191612" text-anchor="middle">C</text>
+          </svg>
+        </div>
+      </div>
+      <div class="meta">
+        <div>
+          <div class="no">03</div>
+          <div class="nm">The swing tag</div>
+          <div class="ds">A clothing tag cut at 45°, with the house C. Says fashion without saying it.</div>
+        </div>
+      </div>
+      <div class="sizes">
+        <span>Small</span>
+        <div class="small">
+          <div class="dot s32">C</div>
+          <div class="dot s20">C</div>
+          <div class="dot s16">C</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 weave C -->
+    <div class="study">
+      <div class="stage">
+        <svg class="mark-weave" viewBox="0 0 96 96" fill="none" aria-label="Woven C">
+          <defs>
+            <pattern id="warp" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M0 4h8" stroke="#191612" stroke-width="1.6"/>
+            </pattern>
+          </defs>
+          <path d="M72 20a32 32 0 100 56" stroke="url(#warp)" stroke-width="15" fill="none"/>
+          <path d="M72 20a32 32 0 100 56" stroke="#94471B" stroke-width="1.2" fill="none" opacity=".55"/>
+        </svg>
+      </div>
+      <div class="meta">
+        <div>
+          <div class="no">04</div>
+          <div class="nm">Woven C</div>
+          <div class="ds">The C built from warp threads — a textile mark that is still a letter.</div>
+        </div>
+      </div>
+      <div class="sizes">
+        <span>Small</span>
+        <div class="small">
+          <div class="dot s32">C</div>
+          <div class="dot s20">C</div>
+          <div class="dot s16">C</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 seal -->
+    <div class="study">
+      <div class="stage">
+        <div class="mark-seal"><span class="mono">C</span></div>
+      </div>
+      <div class="meta">
+        <div>
+          <div class="no">05</div>
+          <div class="nm">The seal</div>
+          <div class="ds">A stamp ring around the serif C. Trustworthy — good over a payment screen.</div>
+        </div>
+      </div>
+      <div class="sizes">
+        <span>Small</span>
+        <div class="small">
+          <div class="dot s32">C</div>
+          <div class="dot s20">C</div>
+          <div class="dot s16">C</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 folded cloth -->
+    <div class="study">
+      <div class="stage">
+        <div class="mark-fold"><span class="mono">C</span></div>
+      </div>
+      <div class="meta">
+        <div>
+          <div class="no">06</div>
+          <div class="nm">Folded cloth</div>
+          <div class="ds">A pressed square with a fold crease and weave hatching. Quietly material.</div>
+        </div>
+      </div>
+      <div class="sizes">
+        <span>Small</span>
+        <div class="small">
+          <div class="dot s32">C</div>
+          <div class="dot s20">C</div>
+          <div class="dot s16">C</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- wordmark studies -->
+  <div style="margin-top:56px;border-top:1px solid var(--ink);padding-top:28px">
+    <div class="eyebrow" style="margin-bottom:20px">Wordmark pairings</div>
+    <div class="grid">
+      <div class="study">
+        <div class="stage" style="height:150px">
+          <div class="wordmark-row">
+            <div class="mark-stitch" style="width:56px;height:56px"><span style="font-size:32px;margin-top:-2px" class="mono">C</span></div>
+            <span class="word" style="font-size:34px">Clothza</span>
+          </div>
+        </div>
+        <div class="meta"><div><div class="no">A</div><div class="nm">Mark + wordmark</div><div class="ds">Square mark, optical gap, lower-case-ish serif. Safe and premium.</div></div></div>
+      </div>
+
+      <div class="study">
+        <div class="stage" style="height:150px">
+          <span class="word" style="font-size:40px">Clothza<span style="color:var(--rust)">.</span></span>
+        </div>
+        <div class="meta"><div><div class="no">B</div><div class="nm">Wordmark alone</div><div class="ds">Just the name and a rust full stop. The most confident option.</div></div></div>
+      </div>
+
+      <div class="study">
+        <div class="stage dark" style="height:150px">
+          <div class="wordmark-row">
+            <div class="mark-stitch" style="width:56px;height:56px;border-color:#EFEAE0"><span style="font-size:32px;margin-top:-2px;color:#EFEAE0" class="mono">C</span></div>
+            <span class="word" style="font-size:34px;color:#EFEAE0">Clothza</span>
+          </div>
+        </div>
+        <div class="meta"><div><div class="no">C</div><div class="nm">Dark reversal</div><div class="ds">For the app icon and night mode. Same mark, cream on ink.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Clothza — identity studies</span>
+    <span>Reply with a number</span>
+  </footer>
+</div>
+</body>
+</html>
