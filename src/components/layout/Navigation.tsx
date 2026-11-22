@@ -448,7 +448,7 @@ export function Navigation() {
       </nav>
 
       {/* ── Mobile Bottom Tab Bar ───────────────────────── */}
-      <MobileTabBar cartCount={cartCount} favCount={favCount} themePreference={themePreference} onCycleTheme={cycleTheme} user={currentUser} onLogout={logout} />
+      <MobileTabBar cartCount={cartCount} favCount={favCount} themePreference={themePreference} onCycleTheme={cycleTheme} user={currentUser} />
     </>
   );
 }
@@ -484,7 +484,7 @@ function DropdownItem({ icon, label, to }: { icon: React.ReactNode; label: strin
 
 // ── Mobile Bottom Tab Bar ────────────────────────────────────
 
-function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycleTheme, user, onLogout }: {
+function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycleTheme, user }: {
   cartCount: number; favCount: number; themePreference: ThemePreference;
   onCycleTheme: () => void; user: User | null;
 }) {
