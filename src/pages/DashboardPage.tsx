@@ -634,7 +634,15 @@ export default function DashboardPage() {
     setDeleteTarget(null);
   };
 
-  const openAdd = () => { setEditTarget(undefined); setProductModal(true); };
+  const openAdd = () => {
+    if (!store) {
+      toast.error('Open your boutique first — products belong to a shop.');
+      setActiveTab('store');
+      return;
+    }
+    setEditTarget(undefined);
+    setProductModal(true);
+  };
   const openEdit = (p: Product) => { setEditTarget(p); setProductModal(true); };
 
   return (
@@ -778,7 +786,15 @@ export default function DashboardPage() {
                 </Button>
               </div>
               {products.length === 0 ? (
-                <EmptyState icon="Package" title="No products yet" description="Add your first product to get started." cta="Add Product" onCtaClick={openAdd} />
+                <EmptyState
+                  icon="Package"
+                  title={store ? 'No products yet' : 'Open a boutique first'}
+                  description={store
+                    ? 'Add your first product to get started.'
+                    : 'Products belong to a shop. Create your boutique in the Store tab, then list pieces here.'}
+                  cta={store ? 'Add Product' : 'Go to Store'}
+                  onCtaClick={openAdd}
+                />
               ) : (
                 <div className="admin-table">
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
