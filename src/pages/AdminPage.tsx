@@ -4,23 +4,20 @@
 // platform stats, admin passcode (SHA-256 lockout)
 // ============================================================
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ShieldCheck, Users, Store, BarChart2, Trash2,
-  Eye, Crown, Lock, AlertTriangle, CheckCircle2,
+  Eye, Crown, Lock, CheckCircle2,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useMarketplace } from '@/hooks/useMarketplace';
-import { useAdminLockout } from '@/hooks/useAdminLockout';
 import { PageTransition } from '@/components/layout/PageTransition';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ConfirmModal } from '@/components/ui/Modal';
 import { TierBadge, OrderStatusBadge } from '@/components/ui/Badge';
 import { toast } from '@/lib/toast';
-import { formatPrice, formatDate, formatCountdown } from '@/lib/formatters';
-import { verifyAdminPassword } from '@/lib/crypto';
+import { formatPrice, formatDate } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import { SubscriptionReview } from '@/components/admin/SubscriptionReview';
 
@@ -39,110 +36,10 @@ export default function AdminPage() {
   const { currentUser } = state;
 
   // Admin lockout hook
-  const { isLocked, remainingMs, attemptsRemaining, recordFailedAttempt, resetLockout } = useAdminLockout();
-
-  // SHA-256 passcode gate
-  const [authenticated, setAuthenticated] = useState(false);
-  const [passcode,       setPasscode]      = useState('');
-  const [checking,       setChecking]      = useState(false);
-  const [countdown,      setCountdown]     = useState(0);
-
-  // Countdown timer for lockout display
-  useEffect(() => {
-    if (!isLocked) { setCountdown(0); return; }
-    setCountdown(Math.ceil(remainingMs / 1000));
-    const interval = setInterval(() => {
-      setCountdown(c => {
-        if (c <= 1) { clearInterval(interval); return 0; }
-        return c - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isLocked, remainingMs]);
 
   const [activeTab, setActiveTab]       = useState<AdminTab>('stats');
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
   const [deleteType,   setDeleteType]   = useState<'user'>('user');
-
-  // Role-based access: only admin role can skip passcode for certain views
-  // But we always require the passcode as an extra layer
-  const handleAuth = async () => {
-    if (isLocked || !passcode) return;
-    setChecking(true);
-    await new Promise(r => setTimeout(r, 400)); // UX delay
-    const valid = await verifyAdminPassword(passcode);
-    setChecking(false);
-    if (valid) {
-      setAuthenticated(true);
-      resetLockout();
-      haptic.success();
-      toast.success('Admin access granted.');
-    } else {
-      recordFailedAttempt();
-      haptic.error();
-      toast.error(`Incorrect passcode. ${attemptsRemaining - 1} attempt${attemptsRemaining - 1 === 1 ? '' : 's'} remaining.`);
-      setPasscode('');
-    }
-  };
-
-  // ── Passcode gate ────────────────────────────────────────────
-  if (!authenticated) {
-    return (
-      <PageTransition>
-        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0,  scale: 1    }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="glass"
-            style={{ maxWidth: 400, width: '100%', padding: 40, borderRadius: 'var(--radius-2xl)', display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'center', textAlign: 'center' }}
-          >
-            <div style={{ width: 64, height: 64, borderRadius: '50%', background: isLocked ? 'var(--danger-light)' : 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {isLocked ? <Lock size={28} color="var(--danger)" /> : <ShieldCheck size={28} color="var(--accent)" />}
-            </div>
-            <div>
-              <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 800, color: 'var(--text-primary)' }}>
-                {isLocked ? 'Access Locked' : 'Admin Access'}
-              </h1>
-              <p style={{ fontSize: 'var(--text-body)', color: 'var(--text-secondary)', marginTop: 8, lineHeight: 'var(--leading-relaxed)' }}>
-                {isLocked
-                  ? `Too many failed attempts. Try again in ${formatCountdown(countdown)}.`
-                  : 'Enter the admin passcode to access the control panel.'}
-              </p>
-            </div>
-
-            {!isLocked && (
-              <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <Input
-                  type="password"
-                  label="Admin Passcode"
-                  placeholder="••••••••"
-                  value={passcode}
-                  onChange={e => setPasscode(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter') handleAuth(); }}
-                  autoFocus
-                />
-                {attemptsRemaining < 5 && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--warning-light)', border: '1px solid var(--warning)', borderRadius: 'var(--radius-md)', padding: '8px 12px', fontSize: 'var(--text-caption)', color: 'var(--warning)', fontWeight: 600 }}>
-                    <AlertTriangle size={13} /> {attemptsRemaining} attempt{attemptsRemaining !== 1 ? 's' : ''} remaining
-                  </div>
-                )}
-                <Button variant="accent" isLoading={checking} onClick={handleAuth} disabled={!passcode.trim()} style={{ width: '100%' }}>
-                  Authenticate
-                </Button>
-              </div>
-            )}
-
-            {isLocked && countdown > 0 && (
-              <div style={{ fontFamily: 'monospace', fontSize: 32, fontWeight: 700, color: 'var(--danger)', letterSpacing: '0.05em' }}>
-                {formatCountdown(countdown)}
-              </div>
-            )}
-          </motion.div>
-        </div>
-      </PageTransition>
-    );
-  }
 
   // ── Authenticated Admin UI ───────────────────────────────────
   const allOrders = state.orders;
@@ -181,9 +78,9 @@ export default function AdminPage() {
           </nav>
 
           <div style={{ position: 'absolute', bottom: 24, left: 12, right: 12 }}>
-            <button onClick={() => setAuthenticated(false)} style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '10px 12px', borderRadius: 'var(--radius-md)', border: 'none', cursor: 'pointer', background: 'transparent', color: 'var(--danger)', fontWeight: 500, fontSize: 'var(--text-body)', fontFamily: 'var(--font-sans)', textAlign: 'left' }}>
-              <Lock size={14} /> Lock Admin
-            </button>
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '10px 12px', borderRadius: 'var(--radius-md)', color: 'var(--text-secondary)', fontWeight: 500, fontSize: 'var(--text-body)', fontFamily: 'var(--font-sans)', textDecoration: 'none' }}>
+              <Lock size={14} /> Leave admin
+            </Link>
           </div>
         </aside>
 

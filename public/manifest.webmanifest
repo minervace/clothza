@@ -1,0 +1,22 @@
+{
+  "name": "Clothza",
+  "short_name": "Clothza",
+  "description": "Independent fashion boutiques from South Asia. Shop limited editions, build looks, support makers.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F0",
+  "theme_color": "#FAF7F0",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "lifestyle"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Browse boutiques", "url": "/" },
+    { "name": "Lookbooks", "url": "/lookbooks" },
+    { "name": "Your account", "url": "/account" }
+  ]
+}

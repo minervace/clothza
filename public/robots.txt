@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /account
+Disallow: /checkout
+Disallow: /orders
+
+Sitemap: https://clothza.tech/sitemap.xml
