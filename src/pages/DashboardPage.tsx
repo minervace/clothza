@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Package, ShoppingBag, MessageCircle,
+  Package, ShoppingBag, MessageCircle, Phone,
   Tag, BarChart2, Plus, Pencil, Trash2,
   DollarSign, Star, Check, Store,
   ChevronDown,
@@ -28,6 +28,7 @@ import { PRODUCT_CATEGORIES } from '@/lib/constants';
 import { StoreSettings } from '@/components/seller/StoreSettings';
 import { ImageUploadInput } from '@/components/seller/ImageUploadInput';
 import { VariantEditor } from '@/components/seller/VariantEditor';
+import { sellerOrderLink } from '@/lib/whatsapp';
 
 type DashTab = 'overview' | 'products' | 'orders' | 'messages' | 'coupons' | 'store';
 
@@ -572,7 +573,7 @@ export default function DashboardPage() {
   const {
     state, getStore, getStoreProducts, getStoreOrders,
     getStoreMessages, deleteProduct, deleteCoupon,
-    createStore, updateStore,
+    createStore, updateStore, getProduct,
   } = useMarketplace();
   const { currentUser } = state;
 
@@ -874,6 +875,14 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       <div style={{ fontFamily: 'var(--font-serif)', fontWeight: 800, fontSize: 'var(--text-subtitle)', color: 'var(--text-primary)' }}>{formatPrice(o.total)}</div>
+                      {(() => {
+                        const link = sellerOrderLink(store?.whatsapp, o, id => getProduct?.(id)?.name ?? id);
+                        return link ? (
+                          <a href={link} target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-sm">
+                            <Phone size={13} /> WhatsApp
+                          </a>
+                        ) : null;
+                      })()}
                       <StatusDropdown orderId={o.id} current={o.status} />
                     </motion.div>
                   ))}
