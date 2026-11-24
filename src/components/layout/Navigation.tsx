@@ -107,7 +107,8 @@ export function Navigation() {
           className={clsx('nav-pill', scrolled && 'scrolled')}
         >
           {/* Logo */}
-          <Link to="/" className="nav-logo" aria-label="Clothza home">
+          <Link to="/" className="nav-logo nav-logo--mark" aria-label="Clothza home">
+            <img src="/logo.png" alt="" width={26} height={27} className="nav-mark" />
             Clothza
           </Link>
 
@@ -449,7 +450,10 @@ export function Navigation() {
 
       {/* ── Mobile Masthead (logo + sign in) ─────────────── */}
       <header className="mobile-header">
-        <Link to="/" className="nav-logo" aria-label="Clothza home">Clothza</Link>
+        <Link to="/" className="nav-logo nav-logo--mark" aria-label="Clothza home">
+          <img src="/logo.png" alt="" width={24} height={25} className="nav-mark" />
+          Clothza
+        </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <button
             type="button"

@@ -1027,6 +1027,17 @@ button, a, input, select, textarea {
   padding-bottom: 0;
 }
 
+.nav-logo--mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.nav-mark {
+  display: block;
+  object-fit: contain;
+}
+
 .nav-logo {
   font-family: var(--font-serif);
   font-size: 20px;

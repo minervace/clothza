@@ -49,7 +49,10 @@ export function Footer() {
           {/* Brand column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div>
-              <div className="footer-brand text-gradient">Clothza</div>
+              <div className="footer-brand text-gradient" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <img src="/logo.png" alt="" width={30} height={32} />
+              Clothza
+            </div>
               <div className="footer-tagline">"Where designers meet tastemakers."</div>
             </div>
             <p
