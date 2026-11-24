@@ -4,7 +4,7 @@
 // orders management with status update, messages, coupon CRUD
 // ============================================================
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Package, ShoppingBag, MessageCircle, Phone,
@@ -29,6 +29,8 @@ import { StoreSettings } from '@/components/seller/StoreSettings';
 import { ImageUploadInput } from '@/components/seller/ImageUploadInput';
 import { VariantEditor } from '@/components/seller/VariantEditor';
 import { sellerOrderLink } from '@/lib/whatsapp';
+import { ConversationView } from '@/components/messages/ConversationView';
+import { fetchStoreConversations, type Conversation } from '@/lib/supabaseMessages';
 
 type DashTab = 'overview' | 'products' | 'orders' | 'messages' | 'coupons' | 'store';
 
@@ -572,7 +574,7 @@ function StatusDropdown({ orderId, current }: { orderId: string; current: OrderS
 export default function DashboardPage() {
   const {
     state, getStore, getStoreProducts, getStoreOrders,
-    getStoreMessages, deleteProduct, deleteCoupon,
+    deleteProduct, deleteCoupon,
     createStore, updateStore, getProduct,
   } = useMarketplace();
   const { currentUser } = state;
@@ -583,6 +585,16 @@ export default function DashboardPage() {
   const [productModal, setProductModal] = useState(false);
   const [editTarget,   setEditTarget]   = useState<Product | undefined>(undefined);
   const [couponModal,  setCouponModal]  = useState(false);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+
+  // Load the inbox whenever the signed-in seller changes. Declared here,
+  // above the auth guard, so the hook order is stable.
+  const userId = currentUser?.id;
+  useEffect(() => {
+    if (!userId) return;
+    void fetchStoreConversations().then(setConversations);
+  }, [userId]);
+
 
   // Auth guard
   if (!currentUser || currentUser.role === 'customer') {
@@ -607,8 +619,11 @@ export default function DashboardPage() {
     ?? state.stores.find(s => s.ownerId === currentUser.id);
   const products = store ? getStoreProducts(store.id) : [];
   const orders   = store ? getStoreOrders(store.id)   : [];
-  const messages = store ? getStoreMessages(store.id) : [];
   const coupons  = state.coupons.filter(c => c.storeId === store?.id);
+
+  const loadConversations = () => {
+    void fetchStoreConversations().then(setConversations);
+  };
 
   const revenue  = orders.filter(o => o.paymentStatus === 'paid').reduce((s, o) => s + o.total, 0);
   const avgRating = products.length > 0
@@ -897,27 +912,24 @@ export default function DashboardPage() {
           {/* Messages */}
           {activeTab === 'messages' && (
             <div>
-              <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-display)', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 28, letterSpacing: '-0.02em' }}>Messages</h1>
-              {messages.length === 0 ? (
-                <EmptyState icon="MessageCircle" title="No messages" description="Customer messages will appear here." compact />
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {messages.map(msg => (
-                    <div key={msg.id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-xl)', padding: 'var(--space-5)', display: 'flex', gap: 14 }}>
-                      <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', fontWeight: 700, fontSize: 16, flexShrink: 0 }}>
-                        {msg.customerName.charAt(0)}
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                          <span style={{ fontWeight: 700, fontSize: 'var(--text-body)', color: 'var(--text-primary)' }}>{msg.customerName}</span>
-                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)' }}>{formatDate(msg.createdAt)}</span>
-                        </div>
-                        <p style={{ fontSize: 'var(--text-body)', color: 'var(--text-secondary)', lineHeight: 'var(--leading-relaxed)', margin: 0 }}>{msg.content}</p>
-                      </div>
-                    </div>
-                  ))}
+              <div style={{ marginBottom: 24 }}>
+                <div className="text-overline" style={{ color: 'var(--text-tertiary)', marginBottom: 8 }}>Inbox</div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-heading)', fontWeight: 600, fontVariationSettings: "'opsz' 72, 'SOFT' 50", color: 'var(--text-primary)' }}>
+                    Customer messages
+                  </h1>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--text-body)', color: 'var(--text-tertiary)' }}>
+                    {conversations.length}
+                  </span>
                 </div>
-              )}
+              </div>
+              <ConversationView
+                conversations={conversations}
+                meId={currentUser.id}
+                titleOf={c => c.customerName || 'Customer'}
+                emptyHint="Customers who message your boutique will appear here, and you can reply."
+                onReplied={loadConversations}
+              />
             </div>
           )}
 

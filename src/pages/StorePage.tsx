@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { toast } from '@/lib/toast';
+import { startConversation } from '@/lib/supabaseMessages';
 import { optimizeImageUrl, formatRating, formatCompactNumber } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import type { Product, ProductCategory } from '@/context/MarketplaceContext';
@@ -29,7 +30,7 @@ export default function StorePage() {
   const { slug }  = useParams<{ slug: string }>();
   const {
     getStore, getStoreProducts, isFavoriteStore, toggleFavoriteStore,
-    sendMessage, state,
+    state,
   } = useMarketplace();
 
   const store     = getStore(slug ?? '');
@@ -75,19 +76,20 @@ export default function StorePage() {
 
   const handleSendMsg = async () => {
     if (!msgText.trim()) return;
-    if (!state.currentUser) {
-      toast.error('Please sign in to message this store.');
-      haptic.error();
-      return;
-    }
     setSendingMsg(true);
-    await new Promise(r => setTimeout(r, 600));
-    sendMessage(store.id, msgText.trim());
-    toast.success('Message sent to ' + store.name);
-    haptic.success();
-    setMsgText('');
-    setMsgOpen(false);
-    setSendingMsg(false);
+    try {
+      if (!state.currentUser) {
+        toast.error('Sign in to message a boutique.');
+        return;
+      }
+      const r = await startConversation(store.id, msgText.trim());
+      if (!r.ok) { toast.error(r.error ?? 'Message could not be sent.'); return; }
+      toast.success(`Message sent to ${store.name}`);
+      setMsgText('');
+      setMsgOpen(false);
+    } finally {
+      setSendingMsg(false);
+    }
   };
 
   return (

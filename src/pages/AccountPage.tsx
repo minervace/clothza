@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Package, Store as StoreIcon, LogOut, KeyRound, UserRound, ChevronRight,
-  MapPin, Plus, Trash2, Star, Camera, ShieldAlert,
+  MapPin, Plus, Trash2, Star, Camera, ShieldAlert, MessageCircle,
 } from 'lucide-react';
 import { useMarketplace } from '@/hooks/useMarketplace';
 import { PageTransition } from '@/components/layout/PageTransition';
@@ -25,8 +25,10 @@ import {
   type Address, type OrderStats,
 } from '@/lib/supabaseAccount';
 import supabase from '@/lib/supabase';
+import { ConversationView } from '@/components/messages/ConversationView';
+import { fetchMyConversations, type Conversation } from '@/lib/supabaseMessages';
 
-type Panel = 'profile' | 'addresses' | 'password' | 'danger';
+type Panel = 'profile' | 'addresses' | 'messages' | 'password' | 'danger';
 
 const emptyAddress: Omit<Address, 'id' | 'createdAt'> = {
   label: 'Home', fullName: '', phone: '', address: '', city: '', province: '', isDefault: false,
@@ -50,6 +52,7 @@ export default function AccountPage() {
   const [editing, setEditing] = useState<Address | null>(null);
   const [draft, setDraft] = useState(emptyAddress);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
 
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +63,7 @@ export default function AccountPage() {
     void getAuthProvider().then(setProvider);
     void fetchAddresses().then(setAddresses);
     void fetchOrderStats().then(setStats);
+    void fetchMyConversations().then(setConversations);
   }, [user]);
 
   const myOrders = state.orders.filter(o => o.userId === user?.id);
@@ -164,6 +168,7 @@ export default function AccountPage() {
   const TABS: Array<{ id: Panel; label: string; icon: typeof UserRound }> = [
     { id: 'profile',   label: 'Profile',   icon: UserRound },
     { id: 'addresses', label: 'Addresses', icon: MapPin },
+    { id: 'messages',  label: 'Messages',  icon: MessageCircle },
     { id: 'password',  label: 'Password',  icon: KeyRound },
     { id: 'danger',    label: 'Delete',    icon: ShieldAlert },
   ];
@@ -370,6 +375,15 @@ export default function AccountPage() {
                   </div>
                 )}
               </div>
+            )}
+
+            {panel === 'messages' && (
+              <ConversationView
+                conversations={conversations}
+                meId={user.id}
+                titleOf={c => c.storeName || 'Boutique'}
+                emptyHint="Message a boutique from its page and the conversation will appear here."
+              />
             )}
 
             {panel === 'password' && (
