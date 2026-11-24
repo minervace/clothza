@@ -4,7 +4,7 @@
 // ============================================================
 
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   Package, Store as StoreIcon, LogOut, KeyRound, UserRound, ChevronRight,
   MapPin, Plus, Trash2, Star, Camera, ShieldAlert, MessageCircle,
@@ -38,7 +38,11 @@ export default function AccountPage() {
   const { state, authReady, logout } = useMarketplace();
   const user = state.currentUser;
 
-  const [panel, setPanel] = useState<Panel>('profile');
+  const [searchParams] = useSearchParams();
+  const initialPanel = (searchParams.get('tab') as Panel | null) ?? 'profile';
+  const [panel, setPanel] = useState<Panel>(
+    ['profile', 'addresses', 'messages', 'password', 'danger'].includes(initialPanel) ? initialPanel : 'profile'
+  );
   const [provider, setProvider] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');

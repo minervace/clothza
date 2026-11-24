@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Search, Search as SearchIcon, Sun, Moon, Heart, ShoppingCart, User as UserIcon,
+  Search, Search as SearchIcon, Sun, Moon, Heart, ShoppingCart, User as UserIcon, MessageCircle,
   LogOut, LayoutDashboard, ShieldCheck, Package,
   Home, BookOpen, Scissors, ChevronDown, Monitor,
 } from 'lucide-react';
@@ -517,15 +517,16 @@ function MobileTabBar({ cartCount: _cartCount, favCount, themePreference, onCycl
     { to: '/lookbooks', icon: BookOpen,    label: 'Lookbooks' },
     { to: '/studio',   icon: Scissors,     label: 'Studio'    },
     { to: '/favorites', icon: Heart,     label: 'Saved',    badge: favCount },
-    { to: '/orders',    icon: UserIcon,  label: 'Orders'   },
+    { to: '/account?tab=messages', icon: MessageCircle, label: 'Messages' },
   ];
 
   return (
     <div className="bottom-tab-bar" role="navigation" aria-label="Mobile navigation">
       {tabs.map(tab => {
         const Icon    = tab.icon;
-        const isActive = location.pathname === tab.to ||
-          (tab.to !== '/' && location.pathname.startsWith(tab.to));
+        const base = tab.to.split('?')[0];
+        const isActive = location.pathname === base ||
+          (base !== '/' && location.pathname.startsWith(base));
         return (
           <Link
             key={tab.label}
