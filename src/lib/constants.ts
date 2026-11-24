@@ -91,7 +91,7 @@ export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
 };
 
 // ── Payment Methods ──────────────────────────────────────────
-export const PAYMENT_METHODS = ['esewa', 'khalti', 'fonepay', 'card'] as const;
+export const PAYMENT_METHODS = ['esewa', 'khalti', 'fonepay', 'card', 'cod'] as const;
 export type PaymentMethod = typeof PAYMENT_METHODS[number];
 
 export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
@@ -99,6 +99,7 @@ export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
   khalti:  'Khalti',
   fonepay: 'Fonepay',
   card:    'Credit / Debit Card',
+  cod:     'Cash on Delivery',
 };
 
 // ── Nepal Provinces ──────────────────────────────────────────

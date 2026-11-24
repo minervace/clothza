@@ -47,7 +47,7 @@ import { optimizeImageUrl } from '@/lib/formatters';
 export type Role             = 'customer' | 'seller' | 'admin';
 export type SubscriptionTier = 'free' | 'bronze' | 'silver' | 'gold';
 export type OrderStatus      = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-export type PaymentMethod    = 'esewa' | 'khalti' | 'fonepay' | 'card';
+export type PaymentMethod    = 'esewa' | 'khalti' | 'fonepay' | 'card' | 'cod';
 export type StoreTheme       = 'minimalist' | 'streetwear' | 'boho' | 'luxury';
 export type ProductCategory  = 'Men' | 'Women' | 'Accessories' | 'Footwear' | 'Kids';
 
@@ -1605,7 +1605,8 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
       total,
       couponCode,
       paymentMethod,
-      paymentStatus:   'paid',
+      // Cash on delivery is not paid until the rider collects it.
+      paymentStatus:   paymentMethod === 'cod' ? 'pending' : 'paid',
       deliveryAddress,
       status:          'pending',
       trackingId:      generateTrackingId(),

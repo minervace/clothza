@@ -45,10 +45,11 @@ const STEPS = [
 ];
 
 const PAYMENT_METHODS: Array<{ id: PaymentMethod; name: string; desc: string }> = [
-  { id: 'esewa',   name: 'eSewa',   desc: 'Pay with your eSewa wallet'   },
-  { id: 'khalti',  name: 'Khalti',  desc: 'Pay with your Khalti account' },
-  { id: 'fonepay', name: 'FonePay', desc: 'Scan QR with any bank app'    },
-  { id: 'card',    name: 'Card',    desc: 'Visa, Mastercard, Amex'        },
+  { id: 'cod',     name: 'Cash on Delivery', desc: 'Pay the rider when it arrives'      },
+  { id: 'esewa',   name: 'eSewa',            desc: 'Pay with your eSewa wallet'         },
+  { id: 'khalti',  name: 'Khalti',           desc: 'Pay with your Khalti account'       },
+  { id: 'fonepay', name: 'FonePay',          desc: 'Scan QR with any bank app'          },
+  { id: 'card',    name: 'Card',             desc: 'Visa, Mastercard, Amex'             },
 ];
 
 export default function CheckoutPage() {
@@ -60,7 +61,7 @@ export default function CheckoutPage() {
   const { cart } = state;
 
   const [step,          setStep]          = useState<Step>(1);
-  const [payment,       setPayment]       = useState<PaymentMethod>('esewa');
+  const [payment,       setPayment]       = useState<PaymentMethod>('cod');
   const [couponInput,   setCouponInput]   = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
   const [placingOrder,  setPlacingOrder]  = useState(false);
@@ -262,6 +263,18 @@ export default function CheckoutPage() {
                     ))}
                   </div>
 
+                  {payment === 'cod' && (
+                    <p style={{ marginTop: 14, fontSize: 'var(--text-caption)', color: 'var(--text-secondary)', lineHeight: 'var(--leading-relaxed)', background: 'var(--bg-secondary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', padding: '10px 12px' }}>
+                      Nothing is charged now. Pay the rider in cash when your order arrives — the shop confirms payment in their dashboard.
+                    </p>
+                  )}
+
+                  {(payment === 'esewa' || payment === 'khalti' || payment === 'fonepay' || payment === 'card') && (
+                    <p style={{ marginTop: 14, fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', lineHeight: 'var(--leading-relaxed)' }}>
+                      Online payment is not connected yet. To order today, choose Cash on Delivery.
+                    </p>
+                  )}
+
                   <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
                     <Button variant="ghost" onClick={() => setStep(2)} type="button">← Back</Button>
                     <Button
@@ -271,7 +284,7 @@ export default function CheckoutPage() {
                       onClick={handleSubmit(handlePlaceOrder)}
                       style={{ flex: 1 }}
                     >
-                      Place Order — {formatPrice(total)}
+                      Place order — {formatPrice(total)}
                     </Button>
                   </div>
                 </motion.div>

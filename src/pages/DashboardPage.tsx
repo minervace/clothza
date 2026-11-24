@@ -24,7 +24,7 @@ import { formatPrice, formatDate, formatRating } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import { optimizeImageUrl } from '@/lib/formatters';
 import type { Product, ProductVariant, OrderStatus } from '@/context/MarketplaceContext';
-import { PRODUCT_CATEGORIES } from '@/lib/constants';
+import { PRODUCT_CATEGORIES, PAYMENT_METHOD_LABELS } from '@/lib/constants';
 import { StoreSettings } from '@/components/seller/StoreSettings';
 import { ImageUploadInput } from '@/components/seller/ImageUploadInput';
 import { VariantEditor } from '@/components/seller/VariantEditor';
@@ -871,7 +871,10 @@ export default function DashboardPage() {
                           {o.deliveryAddress.fullName} — {o.deliveryAddress.city}
                         </div>
                         <div style={{ fontSize: 'var(--text-caption)', color: 'var(--text-tertiary)', marginTop: 2 }}>
-                          {o.items.length} items · {o.paymentMethod.toUpperCase()} · {formatDate(o.createdAt)}
+                          {o.items.length} items · {PAYMENT_METHOD_LABELS[o.paymentMethod] ?? o.paymentMethod} · {formatDate(o.createdAt)}
+                          {o.paymentMethod === 'cod' && o.paymentStatus === 'pending' && (
+                            <span style={{ marginLeft: 8, color: 'var(--warning)', fontWeight: 600 }}>unpaid</span>
+                          )}
                         </div>
                       </div>
                       <div style={{ fontFamily: 'var(--font-serif)', fontWeight: 800, fontSize: 'var(--text-subtitle)', color: 'var(--text-primary)' }}>{formatPrice(o.total)}</div>
