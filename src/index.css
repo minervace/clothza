@@ -1704,6 +1704,15 @@ button, a, input, select, textarea {
   }
 }
 
+/* Account page header clears the fixed masthead */
+.account-header {
+  padding-top: 104px;
+}
+
+@media (max-width: 767px) {
+  .account-header { padding-top: 32px; }
+}
+
 /* ── Account page ─────────────────────────────────────────── */
 .account-grid {
   display: grid;

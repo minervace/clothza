@@ -19,6 +19,7 @@ const mapProfile = (r: Row): User => ({
   id:               String(r['id'] ?? ''),
   name:             String(r['name'] ?? ''),
   email:            String(r['email'] ?? ''),
+  phone:            (r['phone'] as string) ?? undefined,
   avatarUrl:        (r['avatar_url'] as string) ?? undefined,
   role:             (r['role'] as User['role']) ?? 'customer',
   storeId:          (r['store_id'] as string) ?? undefined,

@@ -4,7 +4,7 @@
 // Coupon validation, eSewa/Khalti payment methods
 // ============================================================
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, MapPin, CreditCard, CheckCircle2, Tag, X } from 'lucide-react';
@@ -23,6 +23,7 @@ import { formatPrice, calcOrderTotal } from '@/lib/formatters';
 import { haptic } from '@/lib/haptics';
 import { optimizeImageUrl } from '@/lib/formatters';
 import { NP_PROVINCES } from '@/lib/constants';
+import { fetchAddresses } from '@/lib/supabaseAccount';
 import type { PaymentMethod, DeliveryAddress } from '@/context/MarketplaceContext';
 
 // ── Zod schema ────────────────────────────────────────────────
@@ -66,9 +67,25 @@ export default function CheckoutPage() {
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
   const [placingOrder,  setPlacingOrder]  = useState(false);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<DeliveryForm>({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<DeliveryForm>({
     resolver: zodResolver(deliverySchema),
   });
+
+  // Prefill delivery from the customer's default saved address, once.
+  useEffect(() => {
+    let cancelled = false;
+    void fetchAddresses().then(list => {
+      if (cancelled) return;
+      const a = list.find(x => x.isDefault) ?? list[0];
+      if (!a) return;
+      setValue('fullName', a.fullName);
+      setValue('phone', a.phone);
+      setValue('address', a.address);
+      setValue('city', a.city);
+      setValue('province', a.province);
+    });
+    return () => { cancelled = true; };
+  }, [setValue]);
 
   const storeId = cart.length > 0
     ? (getProduct(cart[0]!.productId)?.storeId ?? '')
