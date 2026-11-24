@@ -22,7 +22,7 @@ const FOOTER_LINKS = {
     { label: 'Analytics',        to: '/dashboard' },
   ],
   Company: [
-    { label: 'About Clothza',   to: '/'          },
+    { label: 'About Clothza',   to: '/about'     },
     { label: 'Privacy Policy',  to: '/privacy'   },
     { label: 'Terms of Service', to: '/terms'    },
     { label: 'Contact Us',      to: '/'          },

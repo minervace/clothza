@@ -32,6 +32,7 @@ const FavoritesPage  = lazy(() => import('@/pages/FavoritesPage'));
 const AuthPage       = lazy(() => import('@/pages/AuthPage'));
 const SellPage       = lazy(() => import('@/pages/SellPage'));
 const AccountPage    = lazy(() => import('@/pages/AccountPage'));
+const AboutPage      = lazy(() => import('@/pages/AboutPage'));
 const PrivacyPage    = lazy(() => import('@/pages/LegalPage').then(m => ({ default: m.PrivacyPage })));
 const TermsPage      = lazy(() => import('@/pages/LegalPage').then(m => ({ default: m.TermsPage })));
 
@@ -79,6 +80,7 @@ function AnimatedRoutes({
           <Route path="/signin"         element={<Suspense fallback={<PageLoader />}><AuthPage /></Suspense>} />
           <Route path="/sell"           element={<Suspense fallback={<PageLoader />}><SellPage /></Suspense>} />
           <Route path="/account"        element={<Suspense fallback={<PageLoader />}><AccountPage /></Suspense>} />
+          <Route path="/about"          element={<Suspense fallback={<PageLoader />}><AboutPage /></Suspense>} />
           <Route path="/privacy"        element={<Suspense fallback={<PageLoader />}><PrivacyPage /></Suspense>} />
           <Route path="/terms"          element={<Suspense fallback={<PageLoader />}><TermsPage /></Suspense>} />
           <Route path="*"              element={<Suspense fallback={<PageLoader />}><NotFoundPage /></Suspense>} />

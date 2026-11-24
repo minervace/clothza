@@ -7,7 +7,7 @@ const BASE = 'https://clothza.tech';
 const url = process.env.VITE_SUPABASE_URL;
 const key = process.env.VITE_SUPABASE_ANON_KEY;
 
-const staticRoutes = ['/', '/lookbooks', '/studio', '/sell', '/privacy', '/terms'];
+const staticRoutes = ['/', '/lookbooks', '/studio', '/sell', '/about', '/privacy', '/terms'];
 let dynamic = [];
 
 if (url && key) {
